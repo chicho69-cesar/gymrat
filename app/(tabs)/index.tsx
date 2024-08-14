@@ -2,10 +2,10 @@ import { Image, StyleSheet } from 'react-native';
 import { Button } from 'tamagui';
 
 import WeeklyCalendar from '@/components/core/WeeklyCalendar';
-import { HelloWave } from '@/components/default/HelloWave';
 import ParallaxScrollView from '@/components/default/ParallaxScrollView';
 import { ThemedText } from '@/components/default/ThemedText';
 import { ThemedView } from '@/components/default/ThemedView';
+import GymRat from '@/components/icons/GymRat';
 
 export default function HomeScreen() {
   return (
@@ -23,8 +23,8 @@ export default function HomeScreen() {
       />
 
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type='title'>GymRat 🏋️‍♂️</ThemedText>
-        <HelloWave />
+        <ThemedText type='title'>GymRat</ThemedText>
+        <GymRat />
       </ThemedView>
 
       {/*  */}
@@ -40,7 +40,8 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'flex-start',
+    gap: 12,
   },
   gymLogo: {
     height: 178,

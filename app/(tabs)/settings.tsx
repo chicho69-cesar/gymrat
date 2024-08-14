@@ -3,6 +3,7 @@ import { Image, StyleSheet } from 'react-native';
 import ParallaxScrollView from '@/components/default/ParallaxScrollView';
 import { ThemedText } from '@/components/default/ThemedText';
 import { ThemedView } from '@/components/default/ThemedView';
+import GymRat from '@/components/icons/GymRat';
 
 export default function SettingsScreen() {
   return (
@@ -16,7 +17,8 @@ export default function SettingsScreen() {
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type='title'>GymRat 🏋️‍♂️</ThemedText>
+        <ThemedText type='title'>GymRat</ThemedText>
+        <GymRat />
       </ThemedView>
     </ParallaxScrollView>
   );
@@ -26,7 +28,8 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'flex-start',
+    gap: 12,
   },
   gymLogo: {
     height: 178,

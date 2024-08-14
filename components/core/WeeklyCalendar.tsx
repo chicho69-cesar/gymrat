@@ -1,10 +1,10 @@
-import { MaterialIcons } from '@expo/vector-icons'
-import moment, { Moment } from 'moment'
-import React, { useState } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons';
+import moment, { Moment } from 'moment';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
-import { DAY_NAMES, MONTH_NAMES } from '@/constants/dates'
-import { StyleSheet } from 'react-native'
+import { DAY_NAMES, MONTH_NAMES } from '@/constants/dates';
+import { StyleSheet } from 'react-native';
 
 interface WeeklyCalendarProps {
   onSelectDate: (date: Moment) => void

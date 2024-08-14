@@ -11,7 +11,7 @@ export const MONTH_NAMES = [
   'Octubre',
   'Noviembre',
   'Diciembre'
-] as const
+] as const;
 
 export const DAY_NAMES = [
   'Dom',
@@ -21,4 +21,4 @@ export const DAY_NAMES = [
   'Jue',
   'Vie',
   'Sáb'
-] as const
+] as const;

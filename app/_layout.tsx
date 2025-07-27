@@ -3,11 +3,14 @@ import '../tamagui-web.css'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
+import * as SQLite from 'expo-sqlite'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
 import { TamaguiProvider } from 'tamagui'
 
+import { DATABASE_NAME } from 'data/constants'
+import { migrateDB } from 'data/migrate-db'
 import { config } from '../tamagui.config'
 
 export {
@@ -38,22 +41,24 @@ export default function RootLayout() {
   }
 
   return (
-    <TamaguiProvider
-      config={config}
-      defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}
-    >
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+    <SQLite.SQLiteProvider databaseName={DATABASE_NAME} onInit={migrateDB}>
+      <TamaguiProvider
+        config={config}
+        defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}
+      >
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
 
-        <Stack>
-          <Stack.Screen
-            name="(tabs)"
-            options={{
-              headerShown: false,
-            }}
-          />
-        </Stack>
-      </ThemeProvider>
-    </TamaguiProvider>
+          <Stack>
+            <Stack.Screen
+              name='(tabs)'
+              options={{
+                headerShown: false,
+              }}
+            />
+          </Stack>
+        </ThemeProvider>
+      </TamaguiProvider>
+    </SQLite.SQLiteProvider>
   )
 }

@@ -1,4 +1,4 @@
-import { Atom, AudioWaveform } from '@tamagui/lucide-icons'
+import { History, Home, Settings } from '@tamagui/lucide-icons'
 import { Tabs } from 'expo-router'
 import { useTheme } from 'tamagui'
 
@@ -21,18 +21,26 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name='index'
+        name='(home)'
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <Atom color={color as any} />,
+          title: 'Inicio',
+          tabBarIcon: ({ color }) => <Home color={color as any} />,
         }}
       />
 
       <Tabs.Screen
-        name='two'
+        name='(history)'
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <AudioWaveform color={color as any} />,
+          title: 'Historial',
+          tabBarIcon: ({ color }) => <History color={color as any} />,
+        }}
+      />
+
+      <Tabs.Screen
+        name='(settings)'
+        options={{
+          title: 'Configuración',
+          tabBarIcon: ({ color }) => <Settings color={color as any} />,
         }}
       />
     </Tabs>

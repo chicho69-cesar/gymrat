@@ -1,3 +1,4 @@
+import Container from 'presentation/components/ui/container'
 import { Text, View } from 'tamagui'
 
 /* 
@@ -8,8 +9,10 @@ comenzado para continuar con él.
 */
 export default function RoutineScreen() {
   return (
-    <View>
-      <Text>RoutineScreen</Text>
-    </View>
+    <Container>
+      <View>
+        <Text>RoutineScreen</Text>
+      </View>
+    </Container>
   )
 }

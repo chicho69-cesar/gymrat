@@ -1,3 +1,4 @@
+import Container from 'presentation/components/ui/container'
 import { Text, View } from 'tamagui'
 
 /* 
@@ -8,8 +9,10 @@ entrenamientos anteriores.
 */
 export default function WorkoutStatsScreen() {
   return (
-    <View>
-      <Text>WorkoutStatsScreen</Text>
-    </View>
+    <Container>
+      <View>
+        <Text>WorkoutStatsScreen</Text>
+      </View>
+    </Container>
   )
 }

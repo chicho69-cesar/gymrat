@@ -12,7 +12,7 @@ export default function NotFoundScreen() {
           Error. La página que estás buscando no existe o ha sido movida.
         </Text>
 
-        <Link href='/' style={styles.link}>
+        <Link href='/(tabs)/(home)/home' style={styles.link}>
           <Text style={styles.linkText}>
             Ir a la página principal
           </Text>

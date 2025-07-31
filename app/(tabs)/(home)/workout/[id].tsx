@@ -1,3 +1,4 @@
+import Container from 'presentation/components/ui/container'
 import { Text, View } from 'tamagui'
 
 /* 
@@ -7,8 +8,10 @@ y repeticiones. También podrá ver el progreso de su entrenamiento.
 */
 export default function WorkoutScreen() {
   return (
-    <View>
-      <Text>WorkoutScreen</Text>
-    </View>
+    <Container>
+      <View>
+        <Text>WorkoutScreen</Text>
+      </View>
+    </Container>
   )
 }

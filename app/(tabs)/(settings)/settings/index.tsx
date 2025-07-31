@@ -1,7 +1,7 @@
 import { Link } from 'expo-router'
 import Container from 'presentation/components/ui/container'
 import Title from 'presentation/components/ui/title'
-// import useExercises from 'presentation/hooks/use-exercises'
+import useExercises from 'presentation/hooks/use-exercises'
 import { Text } from 'tamagui'
 
 /* 
@@ -12,7 +12,7 @@ días de entrenamiento registrados, por ejemplo push, pull, legs, etc. Donde
 el usuario podrá crear, editar y eliminar los días de entrenamiento.
 */
 export default function SettingsScreen() {
-  // const { exercises } = useExercises()
+  const { exercises } = useExercises()
 
   return (
     <Container>

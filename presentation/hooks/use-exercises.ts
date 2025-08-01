@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { Exercise } from 'domain/entities/exercise.entity'
+import { ExercisesUseCases } from 'domain/use-cases/exercises.use-cases'
 import { ExerciseDataSourceImpl } from 'infrastructure/datasources/exercise.datasource.impl'
 import { ExerciseRepositoryImpl } from 'infrastructure/repositories/exercise.repository.impl'
 import { useDatabase } from './use-database'
@@ -20,7 +21,7 @@ export default function useExercises() {
       setError(null)
 
       try {
-        const fetchedExercises = await exerciseRepository.getAllExercises()
+        const fetchedExercises = await ExercisesUseCases.getAllExercises(exerciseRepository)
         console.log('Fetched exercises:', fetchedExercises)
         setExercises(fetchedExercises)
       } catch (error) {

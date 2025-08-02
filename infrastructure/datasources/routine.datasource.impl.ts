@@ -45,6 +45,29 @@ export class RoutineDataSourceImpl implements RoutineDataSource {
     }
   }
 
+  async getLastRoutines(limit: number): Promise<Routine[]> {
+    try {
+      const routines = await this.db.getAllAsync<Routine>(
+        /* sql */`
+          SELECT DISTINCT r.*
+          FROM Routine r
+          INNER JOIN Workout w ON r.id = w.routineId
+          ORDER BY 
+            substr(w.date, 7, 4) DESC,  -- Year
+            substr(w.date, 4, 2) DESC,  -- Month  
+            substr(w.date, 1, 2) DESC   -- Day
+          LIMIT ?
+        `,
+        [limit]
+      )
+
+      return routines
+    } catch (error) {
+      console.error('Error fetching last routines:', error)
+      return []
+    }
+  }
+
   async createRoutine(routine: RoutineDto): Promise<Routine> {
     try {
       const id = generateId()

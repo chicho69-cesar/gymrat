@@ -18,6 +18,10 @@ export class RoutineRepositoryImpl implements RoutineRepository {
     return this.dataSource.getAllRoutines()
   }
 
+  getLastRoutines(limit: number): Promise<Routine[]> {
+    return this.dataSource.getLastRoutines(limit)
+  }
+
   createRoutine(routine: RoutineDto): Promise<Routine> {
     return this.dataSource.createRoutine(routine)
   }

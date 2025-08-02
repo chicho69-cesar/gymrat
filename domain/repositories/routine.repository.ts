@@ -4,6 +4,7 @@ import { CircuitWorkout, Routine } from 'domain/entities/routine.entity'
 export abstract class RoutineRepository {
   abstract getRoutineById(id: string): Promise<Routine | null>
   abstract getAllRoutines(): Promise<Routine[]>
+  abstract getLastRoutines(limit: number): Promise<Routine[]>
   abstract createRoutine(routine: RoutineDto): Promise<Routine>
   abstract updateRoutine(id: string, routine: RoutineDto): Promise<Routine>
   abstract deleteRoutine(id: string): Promise<void>

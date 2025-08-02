@@ -12,6 +12,7 @@ export default function useRoutines() {
   const routineRepository = new RoutineRepositoryImpl(routineDatasource)
 
   const [routines, setRoutines] = useState<Routine[]>([])
+  const [lastRoutines, setLastRoutines] = useState<Routine[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -24,8 +25,16 @@ export default function useRoutines() {
     setError(null)
 
     try {
-      const fetchedRoutines = await RoutineUseCases.getAllRoutines(routineRepository)
+      const [
+        fetchedRoutines,
+        fetchedLastRoutines,
+      ] = await Promise.all([
+        RoutineUseCases.getAllRoutines(routineRepository),
+        RoutineUseCases.getLastRoutines(routineRepository, 5),
+      ])
+
       setRoutines(fetchedRoutines)
+      setLastRoutines(fetchedLastRoutines)
     } catch (error) {
       console.error('Error fetching routines:', error)
       setError('Failed to fetch routines')
@@ -36,6 +45,7 @@ export default function useRoutines() {
 
   return {
     routines,
+    lastRoutines,
     loading,
     error,
 

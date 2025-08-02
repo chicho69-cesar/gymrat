@@ -10,6 +10,10 @@ export class RoutineUseCases {
     return repository.getAllRoutines()
   }
 
+  static async getLastRoutines(repository: RoutineRepository, limit: number): Promise<Routine[]> {
+    return repository.getLastRoutines(limit)
+  }
+
   static async createRoutine(
     repository: RoutineRepository,
     routine: Routine,

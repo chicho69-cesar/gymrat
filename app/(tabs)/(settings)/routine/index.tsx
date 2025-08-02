@@ -25,7 +25,12 @@ export default function RoutineSettingsScreen() {
       {loading ? (
         <FullScreenLoader />
       ) : routines.length > 0 ? (
-        <RoutinesList routines={routines} />
+        <RoutinesList
+          routines={routines}
+          onRefresh={() => {
+            refresh()
+          }}
+        />
       ) : (
         <Text style={styles.emptyMessage}>
           No hay rutinas creadas.

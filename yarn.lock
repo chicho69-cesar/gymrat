@@ -2544,7 +2544,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/vector-icons@npm:^14.0.0":
+"@expo/vector-icons@npm:^14.0.0, @expo/vector-icons@npm:^14.1.0":
   version: 14.1.0
   resolution: "@expo/vector-icons@npm:14.1.0"
   peerDependencies:
@@ -7878,6 +7878,7 @@ __metadata:
     "@babel/core": "npm:^7.24.6"
     "@expo/metro-config": "npm:~0.20.0"
     "@expo/metro-runtime": "npm:~5.0.4"
+    "@expo/vector-icons": "npm:^14.1.0"
     "@react-navigation/native": "npm:6.1.17"
     "@tamagui/babel-plugin": "npm:1.132.11"
     "@tamagui/cli": "npm:1.132.11"

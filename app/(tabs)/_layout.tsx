@@ -17,7 +17,11 @@ export default function TabLayout() {
           backgroundColor: theme.background.val,
           borderBottomColor: theme.borderColor.val,
         },
-        headerTintColor: theme.color.val,
+        headerTitleStyle: {
+          color: theme.red10.val,
+          fontSize: 18,
+          fontWeight: 'bold',
+        },
       }}
     >
       <Tabs.Screen

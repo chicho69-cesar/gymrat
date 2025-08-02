@@ -18,6 +18,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@expo/vector-icons": "^14.1.0",
     "@react-navigation/native": "6.1.17",
     "@tamagui/config": "1.132.11",
     "@tamagui/lucide-icons": "1.132.11",

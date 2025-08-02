@@ -12,6 +12,10 @@ export class ExercisesUseCases {
     return repository.getAllExercises()
   }
 
+  static getTopExercises(repository: ExerciseRepository, limit: number): Promise<Exercise[]> {
+    return repository.getTopExercises(limit)
+  }
+
   static createExercise(repository: ExerciseRepository, exercise: ExerciseDto): Promise<Exercise> {
     if (exercise.rest < 0) {
       throw new Error('Rest time must be a non-negative number')

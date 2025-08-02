@@ -18,6 +18,10 @@ export class ExerciseRepositoryImpl implements ExerciseRepository {
     return this.dataSource.getAllExercises()
   }
 
+  getTopExercises(limit: number): Promise<Exercise[]> {
+    return this.dataSource.getTopExercises(limit)
+  }
+
   createExercise(exercise: ExerciseDto): Promise<Exercise> {
     return this.dataSource.createExercise(exercise)
   }

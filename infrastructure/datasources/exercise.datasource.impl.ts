@@ -44,6 +44,27 @@ export class ExerciseDataSourceImpl implements ExerciseDataSource {
     }
   }
 
+  async getTopExercises(limit: number): Promise<Exercise[]> {
+    try {
+      const exercises = await this.db.getAllAsync<Exercise>(
+        /* sql */`
+          SELECT e.*, COUNT(wde.exerciseId) as usage_count
+          FROM Exercise e
+          LEFT JOIN WorkoutDayExercise wde ON e.id = wde.exerciseId
+          GROUP BY e.id, e.name, e.description, e.rest
+          ORDER BY usage_count DESC, e.name ASC
+          LIMIT ?
+        `,
+        [limit]
+      )
+
+      return exercises
+    } catch (error) {
+      console.error('Error fetching top exercises:', error)
+      return []
+    }
+  }
+
   async createExercise(exercise: ExerciseDto): Promise<Exercise> {
     try {
       const id = generateId()

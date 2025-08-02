@@ -2,10 +2,6 @@ import { Link } from 'expo-router'
 import Container from 'presentation/components/ui/container'
 import { Text, View } from 'tamagui'
 
-/* 
-En esta pantalla vamos a mostrar la lista de las rutinas creadas para
-registrar los entrenamientos. Y poder navegar a dicha rutina.
-*/
 export default function HomeScreen() {
   return (
     <Container>

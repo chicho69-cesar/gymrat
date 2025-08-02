@@ -1,20 +1,17 @@
 
 import ExerciseList from 'presentation/components/exercises/exercise-list'
+import RoutinesList from 'presentation/components/routines/routines-list'
 import Container from 'presentation/components/ui/container'
 import CustomLink from 'presentation/components/ui/custom-link'
 import Title from 'presentation/components/ui/title'
 import useExercises from 'presentation/hooks/use-exercises'
+import useRoutines from 'presentation/hooks/use-routines'
+import { StyleSheet } from 'react-native'
 import { Text } from 'tamagui'
 
-/* 
-En esta pantalla se mostrarán tres secciones, una para las rutinas creadas,
-donde se podrán crear, editar y eliminar rutinas; otra para los ejercicios creados,
-donde se podrán crear, editar y eliminar ejercicios; y una tercera para los
-días de entrenamiento registrados, por ejemplo push, pull, legs, etc. Donde
-el usuario podrá crear, editar y eliminar los días de entrenamiento.
-*/
 export default function SettingsScreen() {
   const { topExercises } = useExercises()
+  const { routines } = useRoutines()
 
   return (
     <Container>
@@ -29,13 +26,13 @@ export default function SettingsScreen() {
           iconPosition='right'
         />
 
-        {/* {exercises.length > 0 ? (
-          <ExerciseList exercises={exercises} />
+        {routines.length > 0 ? (
+          <RoutinesList routines={routines} />
         ) : (
-          <Text style={{ color: '#cbcbcb', textAlign: 'center', marginTop: 20 }}>
+          <Text style={styles.emptyMessage}>
             No hay rutinas creadas.
           </Text>
-        )} */}
+        )}
       </>
 
       <>
@@ -52,7 +49,7 @@ export default function SettingsScreen() {
         {topExercises.length > 0 ? (
           <ExerciseList exercises={topExercises} />
         ) : (
-          <Text style={{ color: '#cbcbcb', textAlign: 'center', marginTop: 20 }}>
+          <Text style={styles.emptyMessage}>
             No hay ejercicios creados.
           </Text>
         )}
@@ -72,7 +69,7 @@ export default function SettingsScreen() {
         {/* {exercises.length > 0 ? (
           <ExerciseList exercises={exercises} />
         ) : (
-          <Text style={{ color: '#cbcbcb', textAlign: 'center', marginTop: 20 }}>
+          <Text style={styles.emptyMessage}>
             No hay días de entrenamiento creados.
           </Text>
         )} */}
@@ -80,3 +77,12 @@ export default function SettingsScreen() {
     </Container>
   )
 }
+
+const styles = StyleSheet.create({
+  emptyMessage: {
+    color: '#cbcbcb',
+    textAlign: 'center',
+    marginVertical: 20,
+    fontSize: 16,
+  }
+})

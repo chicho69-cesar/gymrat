@@ -33,9 +33,6 @@ export default function useExercises() {
         ExercisesUseCases.getTopExercises(exerciseRepository, 5),
       ])
 
-      console.log('Fetched exercises:', fetchedExercises)
-      console.log('Fetched top exercises:', fetchedTopExercises)
-
       setExercises(fetchedExercises)
       setTopExercises(fetchedTopExercises)
     } catch (error) {

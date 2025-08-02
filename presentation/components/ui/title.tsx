@@ -21,8 +21,9 @@ export default function Title({ text, style }: TitleProps) {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 4,
+    color: '#ababab',
   }
 })

@@ -1,5 +1,7 @@
-import { Link } from 'expo-router'
+
+import ExerciseList from 'presentation/components/exercises/exercise-list'
 import Container from 'presentation/components/ui/container'
+import CustomLink from 'presentation/components/ui/custom-link'
 import Title from 'presentation/components/ui/title'
 import useExercises from 'presentation/hooks/use-exercises'
 import { Text } from 'tamagui'
@@ -12,31 +14,69 @@ días de entrenamiento registrados, por ejemplo push, pull, legs, etc. Donde
 el usuario podrá crear, editar y eliminar los días de entrenamiento.
 */
 export default function SettingsScreen() {
-  const { exercises } = useExercises()
+  const { topExercises } = useExercises()
 
   return (
     <Container>
-      <Title text='Rutinas' />
-      <Title text='Ejercicios' />
-      <Title text='Días de entrenamiento' />
+      <>
+        <Title text='Rutinas' />
 
-      <Link href={`/routine`}>
-        <Text>
-          Ver rutinas
-        </Text>
-      </Link>
+        <CustomLink
+          href='/routine'
+          link='Ver todas las rutinas'
+          iconName='arrow-forward-circle-outline'
+          iconSize={20}
+          iconPosition='right'
+        />
 
-      <Link href={`/exercises`}>
-        <Text>
-          Ver ejercicios
-        </Text>
-      </Link>
+        {/* {exercises.length > 0 ? (
+          <ExerciseList exercises={exercises} />
+        ) : (
+          <Text style={{ color: '#cbcbcb', textAlign: 'center', marginTop: 20 }}>
+            No hay rutinas creadas.
+          </Text>
+        )} */}
+      </>
 
-      <Link href={`/workout-days`}>
-        <Text>
-          Ver días de entrenamiento
-        </Text>
-      </Link>
+      <>
+        <Title text='Ejercicios' />
+
+        <CustomLink
+          href='/exercises'
+          link='Ver todos los ejercicios'
+          iconName='arrow-forward-circle-outline'
+          iconSize={20}
+          iconPosition='right'
+        />
+
+        {topExercises.length > 0 ? (
+          <ExerciseList exercises={topExercises} />
+        ) : (
+          <Text style={{ color: '#cbcbcb', textAlign: 'center', marginTop: 20 }}>
+            No hay ejercicios creados.
+          </Text>
+        )}
+      </>
+
+      <>
+        <Title text='Días de entrenamiento' />
+
+        <CustomLink
+          href='/workout-days'
+          link='Ver todos los días de entrenamiento'
+          iconName='arrow-forward-circle-outline'
+          iconSize={20}
+          iconPosition='right'
+        />
+
+        {/* {exercises.length > 0 ? (
+          <ExerciseList exercises={exercises} />
+        ) : (
+          <Text style={{ color: '#cbcbcb', textAlign: 'center', marginTop: 20 }}>
+            No hay días de entrenamiento creados.
+          </Text>
+        )} */}
+      </>
     </Container>
   )
 }

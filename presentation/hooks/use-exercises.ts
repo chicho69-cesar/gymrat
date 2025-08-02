@@ -12,32 +12,46 @@ export default function useExercises() {
   const exerciseRepository = new ExerciseRepositoryImpl(exerciseDataSource)
 
   const [exercises, setExercises] = useState<Exercise[]>([])
+  const [topExercises, setTopExercises] = useState<Exercise[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const fetchExercises = async () => {
-      setLoading(true)
-      setError(null)
-
-      try {
-        const fetchedExercises = await ExercisesUseCases.getAllExercises(exerciseRepository)
-        console.log('Fetched exercises:', fetchedExercises)
-        setExercises(fetchedExercises)
-      } catch (error) {
-        console.error('Failed to fetch exercises:', error)
-        setError('Failed to fetch exercises')
-      } finally {
-        setLoading(false)
-      }
-    }
-
     fetchExercises()
   }, [])
 
+  const fetchExercises = async () => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      const [
+        fetchedExercises,
+        fetchedTopExercises,
+      ] = await Promise.all([
+        ExercisesUseCases.getAllExercises(exerciseRepository),
+        ExercisesUseCases.getTopExercises(exerciseRepository, 5),
+      ])
+
+      console.log('Fetched exercises:', fetchedExercises)
+      console.log('Fetched top exercises:', fetchedTopExercises)
+
+      setExercises(fetchedExercises)
+      setTopExercises(fetchedTopExercises)
+    } catch (error) {
+      console.error('Failed to fetch exercises:', error)
+      setError('Failed to fetch exercises')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return {
     exercises,
+    topExercises,
     loading,
-    error
+    error,
+
+    refresh: fetchExercises,
   }
 }

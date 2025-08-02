@@ -6,12 +6,8 @@ interface ContainerProps extends PropsWithChildren { }
 export default function Container({ children }: ContainerProps) {
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior='padding'
-        style={styles.container}
-      >
+      <KeyboardAvoidingView behavior='padding'>
         <ScrollView
-          style={styles.scrollView}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
         >
@@ -27,8 +23,6 @@ export default function Container({ children }: ContainerProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 16,
   },
-  scrollView: {
-    marginHorizontal: 10
-  }
 })

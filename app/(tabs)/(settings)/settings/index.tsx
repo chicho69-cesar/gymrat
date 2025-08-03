@@ -6,17 +6,20 @@ import RoutinesList from 'presentation/components/routines/routines-list'
 import Container from 'presentation/components/ui/container'
 import CustomLink from 'presentation/components/ui/custom-link'
 import Title from 'presentation/components/ui/title'
+import WorkoutDaysList from 'presentation/components/workout-days/workout-days-list'
 import useExercises from 'presentation/hooks/use-exercises'
 import useRoutines from 'presentation/hooks/use-routines'
+import useWorkoutDays from 'presentation/hooks/use-workout-days'
 
 export default function SettingsScreen() {
   const { topExercises } = useExercises()
   const { lastRoutines } = useRoutines()
+  const { mostFrequents } = useWorkoutDays()
 
   return (
     <Container>
       <>
-        <Title text='Rutinas' />
+        <Title text='Rutinas recientes' />
 
         <CustomLink
           href='/routine'
@@ -36,7 +39,7 @@ export default function SettingsScreen() {
       </>
 
       <>
-        <Title text='Ejercicios' />
+        <Title text='Ejercicios más realizados' />
 
         <CustomLink
           href='/exercises'
@@ -56,7 +59,7 @@ export default function SettingsScreen() {
       </>
 
       <>
-        <Title text='Días de entrenamiento' />
+        <Title text='Días de entrenamiento más frecuentes' />
 
         <CustomLink
           href='/workout-days'
@@ -66,13 +69,13 @@ export default function SettingsScreen() {
           iconPosition='right'
         />
 
-        {/* {exercises.length > 0 ? (
-          <ExerciseList exercises={exercises} />
+        {mostFrequents.length > 0 ? (
+          <WorkoutDaysList workoutDays={mostFrequents} />
         ) : (
           <Text style={styles.emptyMessage}>
             No hay días de entrenamiento creados.
           </Text>
-        )} */}
+        )}
       </>
     </Container>
   )

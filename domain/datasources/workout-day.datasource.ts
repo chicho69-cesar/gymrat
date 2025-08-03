@@ -4,6 +4,7 @@ import { WorkoutDay, WorkoutDayExercise } from 'domain/entities/workout-day.enti
 export abstract class WorkoutDayDataSource {
   abstract getWorkoutDayById(id: string): Promise<WorkoutDay | null>
   abstract getAllWorkoutDays(): Promise<WorkoutDay[]>
+  abstract getMostFrequentWorkoutDays(limit: number): Promise<WorkoutDay[]>
   abstract createWorkoutDay(workoutDay: WorkoutDayDto): Promise<WorkoutDay>
   abstract updateWorkoutDay(id: string, workoutDay: WorkoutDayDto): Promise<WorkoutDay>
   abstract deleteWorkoutDay(id: string): Promise<void>

@@ -45,6 +45,27 @@ export class WorkoutDayDatasourceImpl implements WorkoutDayDataSource {
     }
   }
 
+  async getMostFrequentWorkoutDays(limit: number): Promise<WorkoutDay[]> {
+    try {
+      const workoutDays = await this.db.getAllAsync<WorkoutDay>(
+        /* sql */`
+          SELECT wd.*
+          FROM WorkoutDay wd
+          INNER JOIN Workout w ON wd.id = w.workoutDayId
+          GROUP BY wd.id, wd.name, wd.description
+          ORDER BY COUNT(w.id) DESC, wd.name ASC
+          LIMIT ?
+        `,
+        [limit]
+      )
+
+      return workoutDays
+    } catch (error) {
+      console.error('Error fetching most frequent workout days:', error)
+      return []
+    }
+  }
+
   async createWorkoutDay(workoutDay: WorkoutDayDto): Promise<WorkoutDay> {
     try {
       const id = generateId()

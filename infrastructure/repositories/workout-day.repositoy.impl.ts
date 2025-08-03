@@ -18,6 +18,10 @@ export class WorkoutDayRepositoryImpl implements WorkoutDayRepository {
     return this.datasource.getAllWorkoutDays()
   }
 
+  getMostFrequentWorkoutDays(limit: number): Promise<WorkoutDay[]> {
+    return this.datasource.getMostFrequentWorkoutDays(limit)
+  }
+
   createWorkoutDay(workoutDay: WorkoutDayDto): Promise<WorkoutDay> {
     return this.datasource.createWorkoutDay(workoutDay)
   }

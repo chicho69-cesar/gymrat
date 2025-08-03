@@ -7910,6 +7910,7 @@ __metadata:
     react-native-web: "npm:0.20.0"
     tamagui: "npm:1.132.11"
     typescript: "npm:~5.8.3"
+    zustand: "npm:5.0.7"
   languageName: unknown
   linkType: soft
 
@@ -13910,5 +13911,26 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 10/f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
+  languageName: node
+  linkType: hard
+
+"zustand@npm:5.0.7":
+  version: 5.0.7
+  resolution: "zustand@npm:5.0.7"
+  peerDependencies:
+    "@types/react": ">=18.0.0"
+    immer: ">=9.0.6"
+    react: ">=18.0.0"
+    use-sync-external-store: ">=1.2.0"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    immer:
+      optional: true
+    react:
+      optional: true
+    use-sync-external-store:
+      optional: true
+  checksum: 10/77854f93c2d4d781c11153e447a05edc6072f22ee98a710bec84693777d89cdd0e80004715a7591d985d3f7e591c3b8e731d1f3e5c9444a9ecbfc5517d1c13b4
   languageName: node
   linkType: hard

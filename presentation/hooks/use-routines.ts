@@ -29,8 +29,8 @@ export default function useRoutines() {
         fetchedRoutines,
         fetchedLastRoutines,
       ] = await Promise.all([
-        RoutineUseCases.getAllRoutines(routineRepository),
-        RoutineUseCases.getLastRoutines(routineRepository, 5),
+        RoutineUseCases.getAll(routineRepository),
+        RoutineUseCases.getLast(routineRepository, 5),
       ])
 
       setRoutines(fetchedRoutines)

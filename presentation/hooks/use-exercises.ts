@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
-import { Exercise } from 'domain/entities/exercise.entity'
+import { ExerciseDto } from 'domain/dtos/exercise.dto'
 import { ExercisesUseCases } from 'domain/use-cases/exercises.use-cases'
 import { ExerciseDataSourceImpl } from 'infrastructure/datasources/exercise.datasource.impl'
 import { ExerciseRepositoryImpl } from 'infrastructure/repositories/exercise.repository.impl'
+import { useExercisesStore } from 'presentation/store/exercises.store'
 import { useDatabase } from './use-database'
 
 export default function useExercises() {
@@ -11,10 +12,14 @@ export default function useExercises() {
   const exerciseDataSource = new ExerciseDataSourceImpl(db)
   const exerciseRepository = new ExerciseRepositoryImpl(exerciseDataSource)
 
-  const [exercises, setExercises] = useState<Exercise[]>([])
-  const [topExercises, setTopExercises] = useState<Exercise[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const exercises = useExercisesStore((state) => state.exercises)
+  const topExercises = useExercisesStore((state) => state.topExercises)
+  const loading = useExercisesStore((state) => state.isLoading)
+  const error = useExercisesStore((state) => state.error)
+  const setExercises = useExercisesStore((state) => state.setExercises)
+  const setTopExercises = useExercisesStore((state) => state.setTopExercises)
+  const setLoading = useExercisesStore((state) => state.setIsLoading)
+  const setError = useExercisesStore((state) => state.setError)
 
   useEffect(() => {
     fetchExercises()
@@ -29,8 +34,8 @@ export default function useExercises() {
         fetchedExercises,
         fetchedTopExercises,
       ] = await Promise.all([
-        ExercisesUseCases.getAllExercises(exerciseRepository),
-        ExercisesUseCases.getTopExercises(exerciseRepository, 5),
+        ExercisesUseCases.getAll(exerciseRepository),
+        ExercisesUseCases.getTop(exerciseRepository, 5),
       ])
 
       setExercises(fetchedExercises)
@@ -43,6 +48,26 @@ export default function useExercises() {
     }
   }
 
+  const createUpdateExercise = async (exerciseDto: ExerciseDto, id: string) => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      if (id === 'new') {
+        await ExercisesUseCases.create(exerciseRepository, exerciseDto)
+      } else {
+        await ExercisesUseCases.update(exerciseRepository, id, exerciseDto)
+      }
+
+      await fetchExercises()
+    } catch (error) {
+      console.error('Failed to create/update exercise:', error)
+      setError('Failed to create/update exercise')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return {
     exercises,
     topExercises,
@@ -50,5 +75,6 @@ export default function useExercises() {
     error,
 
     refresh: fetchExercises,
+    createUpdateExercise,
   }
 }

@@ -4,19 +4,19 @@ import { ExerciseRepository } from 'domain/repositories/exercise.repository'
 import { WorkoutDayRepository } from 'domain/repositories/workout-day.repository'
 
 export class ExercisesUseCases {
-  static getExercise(repository: ExerciseRepository, id: string): Promise<Exercise | null> {
+  static getById(repository: ExerciseRepository, id: string): Promise<Exercise | null> {
     return repository.getExerciseById(id)
   }
 
-  static getAllExercises(repository: ExerciseRepository): Promise<Exercise[]> {
+  static getAll(repository: ExerciseRepository): Promise<Exercise[]> {
     return repository.getAllExercises()
   }
 
-  static getTopExercises(repository: ExerciseRepository, limit: number): Promise<Exercise[]> {
+  static getTop(repository: ExerciseRepository, limit: number): Promise<Exercise[]> {
     return repository.getTopExercises(limit)
   }
 
-  static createExercise(repository: ExerciseRepository, exercise: ExerciseDto): Promise<Exercise> {
+  static create(repository: ExerciseRepository, exercise: ExerciseDto): Promise<Exercise> {
     if (exercise.rest < 0) {
       throw new Error('Rest time must be a non-negative number')
     }
@@ -28,7 +28,7 @@ export class ExercisesUseCases {
     return repository.createExercise(exercise)
   }
 
-  static updateExercise(repository: ExerciseRepository, id: string, exercise: ExerciseDto): Promise<Exercise> {
+  static update(repository: ExerciseRepository, id: string, exercise: ExerciseDto): Promise<Exercise> {
     if (exercise.rest < 0) {
       throw new Error('Rest time must be a non-negative number')
     }
@@ -40,7 +40,7 @@ export class ExercisesUseCases {
     return repository.updateExercise(id, exercise)
   }
 
-  static async deleteExercise(
+  static async delete(
     repository: ExerciseRepository,
     workoutRepository: WorkoutDayRepository,
     id: string

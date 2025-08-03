@@ -1,25 +1,30 @@
+import { CircuitWorkoutDto, RoutineDto } from 'domain/dtos/routine.dto'
 import { CircuitWorkout, Routine } from 'domain/entities/routine.entity'
 import { RoutineRepository } from 'domain/repositories/routine.repository'
+import { CircuitWorkoutMapper } from 'infrastructure/mappers/circuit-workout.mapper'
 
 export class RoutineUseCases {
-  static async getRoutine(repository: RoutineRepository, id: string): Promise<Routine | null> {
+  static async getById(repository: RoutineRepository, id: string): Promise<Routine | null> {
     return repository.getRoutineById(id)
   }
 
-  static async getAllRoutines(repository: RoutineRepository): Promise<Routine[]> {
+  static async getAll(repository: RoutineRepository): Promise<Routine[]> {
     return repository.getAllRoutines()
   }
 
-  static async getLastRoutines(repository: RoutineRepository, limit: number): Promise<Routine[]> {
+  static async getLast(repository: RoutineRepository, limit: number): Promise<Routine[]> {
     return repository.getLastRoutines(limit)
   }
 
-  static async createRoutine(
+  static async create(
     repository: RoutineRepository,
-    routine: Routine,
+    routine: RoutineDto,
     circuitWorkouts: CircuitWorkout[] = []
   ): Promise<Routine> {
-    const circuitWorkoutPromises = circuitWorkouts.map(repository.createCircuitWorkout)
+    const circuitWorkoutPromises = circuitWorkouts
+      .map((circuitWorkout) => repository.createCircuitWorkout(
+        CircuitWorkoutMapper.toDto(circuitWorkout)
+      ))
 
     if (circuitWorkouts.length > 0) {
       await Promise.all(circuitWorkoutPromises)
@@ -28,13 +33,15 @@ export class RoutineUseCases {
     return repository.createRoutine(routine)
   }
 
-  static async updateRoutine(
+  static async update(
     repository: RoutineRepository,
     id: string,
-    routine: Routine,
+    routine: RoutineDto,
     circuitWorkouts: CircuitWorkout[] = []
   ): Promise<Routine> {
-    const circuitWorkoutPromises = circuitWorkouts.map((cw) => repository.updateCircuitWorkout(cw.id, cw))
+    const circuitWorkoutPromises = circuitWorkouts.map((cw) => repository.updateCircuitWorkout(
+      cw.id, CircuitWorkoutMapper.toDto(cw)
+    ))
 
     if (circuitWorkouts.length > 0) {
       await Promise.all(circuitWorkoutPromises)
@@ -43,7 +50,7 @@ export class RoutineUseCases {
     return repository.updateRoutine(id, routine)
   }
 
-  static async deleteRoutine(repository: RoutineRepository, id: string): Promise<void> {
+  static async delete(repository: RoutineRepository, id: string): Promise<void> {
     const circuitWorkouts = await repository.getCircuitWorkout(id)
 
     if (circuitWorkouts.length > 0) {
@@ -53,26 +60,26 @@ export class RoutineUseCases {
     return repository.deleteRoutine(id)
   }
 
-  static async getCircuitWorkout(repository: RoutineRepository, routineId: string): Promise<CircuitWorkout[]> {
+  static async getCircuit(repository: RoutineRepository, routineId: string): Promise<CircuitWorkout[]> {
     return repository.getCircuitWorkout(routineId)
   }
 
-  static async createCircuitWorkout(
+  static async createCircuit(
     repository: RoutineRepository,
-    circuitWorkout: CircuitWorkout
+    circuitWorkout: CircuitWorkoutDto
   ): Promise<CircuitWorkout> {
     return repository.createCircuitWorkout(circuitWorkout)
   }
 
-  static async updateCircuitWorkout(
+  static async updateCircuit(
     repository: RoutineRepository,
     id: string,
-    circuitWorkout: CircuitWorkout
+    circuitWorkout: CircuitWorkoutDto
   ): Promise<CircuitWorkout> {
     return repository.updateCircuitWorkout(id, circuitWorkout)
   }
 
-  static async deleteCircuitWorkout(repository: RoutineRepository, id: string): Promise<void> {
+  static async deleteCircuit(repository: RoutineRepository, id: string): Promise<void> {
     return repository.deleteCircuitWorkout(id)
   }
 }

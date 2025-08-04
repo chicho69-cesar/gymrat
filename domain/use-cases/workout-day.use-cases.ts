@@ -18,19 +18,25 @@ export class WorkoutDayUseCases {
 
   static async create(
     repository: WorkoutDayRepository,
-    workoutDay: WorkoutDay,
+    workoutDay: WorkoutDayDto,
     exercises: WorkoutDayExercise[] = []
   ): Promise<WorkoutDay> {
-    const exercisePromises = exercises
-      .map((exercise) => repository.createWorkoutDayExercise(
-        WorkoutDayExerciseMapper.toDto(exercise)
-      ))
+    const createdWorkoutDay = await repository.createWorkoutDay(workoutDay)
+
+    const exercisePromises = exercises.map((exercise) => {
+      return repository.createWorkoutDayExercise(
+        WorkoutDayExerciseMapper.toDto({
+          ...exercise,
+          workoutDayId: createdWorkoutDay.id,
+        })
+      )
+    })
 
     if (exercises.length > 0) {
       await Promise.all(exercisePromises)
     }
 
-    return repository.createWorkoutDay(workoutDay)
+    return createdWorkoutDay
   }
 
   static async update(
@@ -39,15 +45,36 @@ export class WorkoutDayUseCases {
     workoutDay: WorkoutDayDto,
     exercises: WorkoutDayExercise[] = []
   ): Promise<WorkoutDay> {
-    const exercisePromises = exercises.map((exercise) => repository.updateWorkoutDayExercise(
-      exercise.id, WorkoutDayExerciseMapper.toDto(exercise)
-    ))
+    const updatedWorkoutDay = await repository.updateWorkoutDay(id, workoutDay)
+
+    const existingExercises = await repository.getWorkoutDayExercises(id)
+    const existingExerciseIds = new Set(existingExercises.map((ex) => ex.id))
+
+    const updatedExercises = exercises.filter((ex) => ex.id !== 'new' && existingExerciseIds.has(ex.id))
+    const exercisesToDelete = existingExercises.filter((ex) => !updatedExercises.some((ue) => ue.id === ex.id))
+
+    if (exercisesToDelete.length > 0) {
+      await Promise.all(exercisesToDelete.map((ex) => repository.deleteWorkoutDayExercise(ex.id)))
+    }
+
+    const exercisePromises = exercises.map((exercise) => {
+      if (exercise.id === 'new') {
+        return repository.createWorkoutDayExercise(
+          WorkoutDayExerciseMapper.toDto({
+            ...exercise,
+            workoutDayId: updatedWorkoutDay.id,
+          })
+        )
+      } else {
+        return repository.updateWorkoutDayExercise(exercise.id, WorkoutDayExerciseMapper.toDto(exercise))
+      }
+    })
 
     if (exercises.length > 0) {
       await Promise.all(exercisePromises)
     }
 
-    return repository.updateWorkoutDay(id, workoutDay)
+    return updatedWorkoutDay
   }
 
   static async delete(repository: WorkoutDayRepository, id: string): Promise<void> {

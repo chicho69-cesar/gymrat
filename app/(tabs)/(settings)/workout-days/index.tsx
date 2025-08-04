@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 import { Text } from 'tamagui'
 
 import Container from 'presentation/components/ui/container'
@@ -9,7 +9,28 @@ import WorkoutDaysList from 'presentation/components/workout-days/workout-days-l
 import useWorkoutDays from 'presentation/hooks/use-workout-days'
 
 export default function WorkoutDaysScreen() {
-  const { loading, refresh, workoutDays } = useWorkoutDays()
+  const { loading, refresh, workoutDays, deleteWorkoutDay } = useWorkoutDays()
+
+  const handleDelete = (workoutDayId: string) => {
+    Alert.alert(
+      'Confirm Delete',
+      '¿Estas seguro de eliminar este día de entrenamiento?',
+      [
+        {
+          text: 'Canelar',
+          style: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteWorkoutDay(workoutDayId)
+            refresh()
+          },
+        },
+      ]
+    )
+  }
 
   return (
     <Container>
@@ -30,6 +51,7 @@ export default function WorkoutDaysScreen() {
           onRefresh={() => {
             refresh()
           }}
+          onDelete={handleDelete}
         />
       ) : (
         <Text style={styles.emptyMessage}>

@@ -8,9 +8,10 @@ import { WorkoutDay } from 'domain/entities/workout-day.entity'
 interface WorkoutDaysListProps {
   workoutDays: WorkoutDay[]
   onRefresh?: () => void
+  onDelete?: (workoutDayId: string) => void
 }
 
-export default function WorkoutDaysList({ workoutDays, onRefresh }: WorkoutDaysListProps) {
+export default function WorkoutDaysList({ workoutDays, onRefresh, onDelete }: WorkoutDaysListProps) {
   const theme = useTheme()
   const [isRefreshing, setIsRefreshing] = useState(false)
 
@@ -46,6 +47,7 @@ export default function WorkoutDaysList({ workoutDays, onRefresh }: WorkoutDaysL
             }
           ]}
           onPress={() => router.push(`/workout-days/${item.id}`)}
+          onLongPress={() => onDelete?.(item.id)}
         >
           <Text
             style={[

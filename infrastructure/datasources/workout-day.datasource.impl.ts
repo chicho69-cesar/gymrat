@@ -70,7 +70,7 @@ export class WorkoutDayDatasourceImpl implements WorkoutDayDataSource {
     try {
       const id = generateId()
 
-      const newWorkoutDay = await this.db.runAsync(
+      await this.db.runAsync(
         /* sql */`
           INSERT INTO WorkoutDay (id, name, description)
           VALUES (?, ?, ?)
@@ -78,7 +78,7 @@ export class WorkoutDayDatasourceImpl implements WorkoutDayDataSource {
         [id, workoutDay.name, workoutDay.description || '']
       )
 
-      return WorkoutDayMapper.toEntity(workoutDay, newWorkoutDay.lastInsertRowId.toString())
+      return WorkoutDayMapper.toEntity(workoutDay, id)
     } catch (error) {
       console.error('Error creating workout day:', error)
       throw new Error('Failed to create workout day')
@@ -119,12 +119,14 @@ export class WorkoutDayDatasourceImpl implements WorkoutDayDataSource {
 
   async getWorkoutDayExercisesByWorkoutDayId(workoutDayId: string): Promise<WorkoutDayExercise[]> {
     try {
+      console.log('Fetching workout day exercises for workout day ID:', workoutDayId)
       const exercises = await this.db.getAllAsync<WorkoutDayExercise>(
         /* sql */`
           SELECT * FROM WorkoutDayExercise WHERE workoutDayId = ?
         `,
         [workoutDayId]
       )
+      console.log('Fetched workout day exercises:', exercises)
 
       return exercises
     } catch (error) {
@@ -153,7 +155,7 @@ export class WorkoutDayDatasourceImpl implements WorkoutDayDataSource {
     try {
       const id = generateId()
 
-      const newExercise = await this.db.runAsync(
+      await this.db.runAsync(
         /* sql */`
           INSERT INTO WorkoutDayExercise (id, sets, heatingSets, workoutDayId, exerciseId)
           VALUES (?, ?, ?, ?, ?)
@@ -161,10 +163,7 @@ export class WorkoutDayDatasourceImpl implements WorkoutDayDataSource {
         [id, workoutDayExercise.sets, workoutDayExercise.heatingSets, workoutDayExercise.workoutDayId, workoutDayExercise.exerciseId]
       )
 
-      return WorkoutDayExerciseMapper.toEntity(
-        workoutDayExercise,
-        newExercise.lastInsertRowId.toString()
-      )
+      return WorkoutDayExerciseMapper.toEntity(workoutDayExercise, id)
     } catch (error) {
       console.error('Error creating workout day exercise:', error)
       throw new Error('Failed to create workout day exercise')

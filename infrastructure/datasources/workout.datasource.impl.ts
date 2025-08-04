@@ -50,7 +50,7 @@ export class WorkoutDataSourceImpl implements WorkoutDataSource {
     try {
       const id = generateId()
 
-      const newWorkout = await this.db.runAsync(
+      await this.db.runAsync(
         /* sql */`
           INSERT INTO Workout (id, date, routineId, workoutDayId)
           VALUES (?, ?, ?, ?)
@@ -58,7 +58,7 @@ export class WorkoutDataSourceImpl implements WorkoutDataSource {
         [id, workout.date, workout.routineId, workout.workoutDayId]
       )
 
-      return WorkoutMapper.toEntity(workout, newWorkout.lastInsertRowId.toString())
+      return WorkoutMapper.toEntity(workout, id)
     } catch (error) {
       console.error('Error creating workout:', error)
       throw new Error('Failed to create workout')
@@ -125,10 +125,7 @@ export class WorkoutDataSourceImpl implements WorkoutDataSource {
         [id, workoutExercise.workoutId, workoutExercise.workoutDayExerciseId]
       )
 
-      return WorkoutExerciseMapper.toEntity(
-        workoutExercise,
-        newWorkoutExercise.lastInsertRowId.toString()
-      )
+      return WorkoutExerciseMapper.toEntity(workoutExercise, id)
     } catch (error) {
       console.error('Error creating workout exercise:', error)
       throw new Error('Failed to create workout exercise')
@@ -187,7 +184,7 @@ export class WorkoutDataSourceImpl implements WorkoutDataSource {
     try {
       const id = generateId()
 
-      const newExerciseSet = await this.db.runAsync(
+      await this.db.runAsync(
         /* sql */`
           INSERT INTO ExerciseSet (id, unit, reps, weight, setNumber, workoutExerciseId)
           VALUES (?, ?, ?, ?, ?, ?)
@@ -202,10 +199,7 @@ export class WorkoutDataSourceImpl implements WorkoutDataSource {
         ]
       )
 
-      return ExerciseSetMapper.toEntity(
-        exerciseSet,
-        newExerciseSet.lastInsertRowId.toString()
-      )
+      return ExerciseSetMapper.toEntity(exerciseSet, id)
     } catch (error) {
       console.error('Error creating exercise set:', error)
       throw new Error('Failed to create exercise set')

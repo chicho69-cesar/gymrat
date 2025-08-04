@@ -69,7 +69,7 @@ export class ExerciseDataSourceImpl implements ExerciseDataSource {
     try {
       const id = generateId()
 
-      const newExercise = await this.db.runAsync(
+      await this.db.runAsync(
         /* sql */`
           INSERT INTO Exercise (id, name, description, rest)
           VALUES (?, ?, ?, ?)
@@ -77,7 +77,7 @@ export class ExerciseDataSourceImpl implements ExerciseDataSource {
         [id, exercise.name, exercise.description || '', exercise.rest]
       )
 
-      return ExerciseMapper.toEntity(exercise, newExercise.lastInsertRowId.toString())
+      return ExerciseMapper.toEntity(exercise, id)
     } catch (error) {
       console.error('Error creating exercise:', error)
       throw new Error('Failed to create exercise')

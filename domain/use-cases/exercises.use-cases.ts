@@ -49,7 +49,7 @@ export class ExercisesUseCases {
       const exercises = await workoutRepository.getWorkoutDayExercisesByExerciseId(id)
 
       if (exercises.length > 0) {
-        throw new Error('Cannot delete exercise that is associated with workout days')
+        throw new Error('No se puede eliminar el ejercicio porque está siendo utilizado en uno o más días de entrenamiento')
       }
 
       return repository.deleteExercise(id)

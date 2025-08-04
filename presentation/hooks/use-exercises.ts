@@ -3,7 +3,9 @@ import { useEffect } from 'react'
 import { ExerciseDto } from 'domain/dtos/exercise.dto'
 import { ExercisesUseCases } from 'domain/use-cases/exercises.use-cases'
 import { ExerciseDataSourceImpl } from 'infrastructure/datasources/exercise.datasource.impl'
+import { WorkoutDayDatasourceImpl } from 'infrastructure/datasources/workout-day.datasource.impl'
 import { ExerciseRepositoryImpl } from 'infrastructure/repositories/exercise.repository.impl'
+import { WorkoutDayRepositoryImpl } from 'infrastructure/repositories/workout-day.repository.impl'
 import { useExercisesStore } from 'presentation/store/exercises.store'
 import { useDatabase } from './use-database'
 
@@ -11,6 +13,8 @@ export default function useExercises() {
   const { db } = useDatabase()
   const exerciseDataSource = new ExerciseDataSourceImpl(db)
   const exerciseRepository = new ExerciseRepositoryImpl(exerciseDataSource)
+  const workoutDayDatasource = new WorkoutDayDatasourceImpl(db)
+  const workoutDayRepository = new WorkoutDayRepositoryImpl(workoutDayDatasource)
 
   const exercises = useExercisesStore((state) => state.exercises)
   const topExercises = useExercisesStore((state) => state.topExercises)
@@ -68,6 +72,21 @@ export default function useExercises() {
     }
   }
 
+  const deleteExercise = async (id: string) => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      await ExercisesUseCases.delete(exerciseRepository, workoutDayRepository, id)
+      await fetchExercises()
+    } catch (error) {
+      console.error('Failed to delete exercise:', error)
+      setError(error.message || 'Error al eliminar el ejercicio')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return {
     exercises,
     topExercises,
@@ -76,5 +95,6 @@ export default function useExercises() {
 
     refresh: fetchExercises,
     createUpdateExercise,
+    deleteExercise,
   }
 }

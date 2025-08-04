@@ -72,7 +72,7 @@ export class RoutineDataSourceImpl implements RoutineDataSource {
     try {
       const id = generateId()
 
-      const newRoutine = await this.db.runAsync(
+      await this.db.runAsync(
         /* sql */`
           INSERT INTO Routine (id, name, description)
           VALUES (?, ?, ?)
@@ -80,7 +80,7 @@ export class RoutineDataSourceImpl implements RoutineDataSource {
         [id, routine.name, routine.description || '']
       )
 
-      return RoutineMapper.toEntity(routine, newRoutine.lastInsertRowId.toString())
+      return RoutineMapper.toEntity(routine, id)
     } catch (error) {
       console.error('Error creating routine:', error)
       throw new Error('Failed to create routine')
@@ -139,7 +139,7 @@ export class RoutineDataSourceImpl implements RoutineDataSource {
     try {
       const id = generateId()
 
-      const newCircuitWorkout = await this.db.runAsync(
+      await this.db.runAsync(
         /* sql */`
           INSERT INTO CircuitWorkout (id, routineId, workoutDayId, orderNumber)
           VALUES (?, ?, ?, ?)
@@ -147,7 +147,7 @@ export class RoutineDataSourceImpl implements RoutineDataSource {
         [id, circuitWorkout.routineId, circuitWorkout.workoutDayId, circuitWorkout.orderNumber]
       )
 
-      return CircuitWorkoutMapper.toEntity(circuitWorkout, newCircuitWorkout.lastInsertRowId.toString())
+      return CircuitWorkoutMapper.toEntity(circuitWorkout, id)
     } catch (error) {
       console.error('Error creating circuit workout:', error)
       throw new Error('Failed to create circuit workout')

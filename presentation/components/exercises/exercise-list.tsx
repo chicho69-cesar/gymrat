@@ -9,9 +9,10 @@ import { Exercise } from 'domain/entities/exercise.entity'
 interface ExerciseListProps {
   exercises: Exercise[]
   onRefresh?: () => void
+  onDelete?: (exerciseId: string) => void
 }
 
-export default function ExerciseList({ exercises, onRefresh }: ExerciseListProps) {
+export default function ExerciseList({ exercises, onRefresh, onDelete }: ExerciseListProps) {
   const theme = useTheme()
   const [isRefreshing, setIsRefreshing] = useState(false)
 
@@ -47,6 +48,7 @@ export default function ExerciseList({ exercises, onRefresh }: ExerciseListProps
             }
           ]}
           onPress={() => router.push(`/exercises/${item.id}`)}
+          onLongPress={() => onDelete?.(item.id)}
         >
           <Text
             style={[

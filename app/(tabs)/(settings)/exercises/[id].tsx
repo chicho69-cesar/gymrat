@@ -125,7 +125,7 @@ export default function ExercisesScreen() {
           disabled={loading || !form.name.trim()}
           opacity={loading || !form.name.trim() ? 0.6 : 1}
         >
-          {loading ? 'Guardando...' : (id === 'new' ? 'Crear ejercicio' : 'Actualizar ejercicio')}
+          {id === 'new' ? 'Crear ejercicio' : 'Actualizar ejercicio'}
         </Button>
 
         <Button

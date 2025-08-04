@@ -1,4 +1,5 @@
-import { StyleSheet } from 'react-native'
+import { useEffect } from 'react'
+import { Alert, StyleSheet } from 'react-native'
 import { Text } from 'tamagui'
 
 import ExerciseList from 'presentation/components/exercises/exercise-list'
@@ -9,7 +10,34 @@ import Title from 'presentation/components/ui/title'
 import useExercises from 'presentation/hooks/use-exercises'
 
 export default function ExercisesScreen() {
-  const { loading, exercises, refresh } = useExercises()
+  const { loading, exercises, error, refresh, deleteExercise } = useExercises()
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert('Error', error, [{ text: 'OK' }])
+    }
+  }, [error])
+
+  const handleDelete = async (exerciseId: string) => {
+    Alert.alert(
+      'Confirm Delete',
+      '¿Estas seguro de eliminar este ejercicio?',
+      [
+        {
+          text: 'Canelar',
+          style: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteExercise(exerciseId)
+            refresh()
+          },
+        },
+      ]
+    )
+  }
 
   return (
     <Container>
@@ -30,6 +58,7 @@ export default function ExercisesScreen() {
           onRefresh={() => {
             refresh()
           }}
+          onDelete={handleDelete}
         />
       ) : (
         <Text style={styles.emptyMessage}>

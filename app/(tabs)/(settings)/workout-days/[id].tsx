@@ -55,7 +55,7 @@ export default function WorkoutDaysScreen() {
   }, [id, workoutDays])
 
   useEffect(() => {
-    if (workoutDayExercises.length > 0) {
+    if (workoutDayExercises.length > 0 && id !== 'new') {
       const exercisesWithNames = workoutDayExercises.map((wde) => {
         const exercise = exercises.find((ex) => ex.id === wde.exerciseId)
         return SelectedExerciseMapper.fromEntity(wde, exercise?.name || 'Ejercicio no encontrado')

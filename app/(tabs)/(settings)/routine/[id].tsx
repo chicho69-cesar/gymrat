@@ -55,7 +55,7 @@ export default function RoutineSettingsScreen() {
   }, [id, routines])
 
   useEffect(() => {
-    if (routineCircuits.length > 0) {
+    if (routineCircuits.length > 0 && id !== 'new') {
       const circuitsWithNames = routineCircuits
         .sort((a, b) => a.orderNumber - b.orderNumber)
         .map((circuit) => {

@@ -1,33 +1,36 @@
-import { Link } from 'expo-router'
+import { StyleSheet } from 'react-native'
+import { Text } from 'tamagui'
+
+import RoutinesList from 'presentation/components/routines/routines-list'
 import Container from 'presentation/components/ui/container'
-import { Text, View } from 'tamagui'
+import Title from 'presentation/components/ui/title'
+import useRoutines from 'presentation/hooks/use-routines'
 
 export default function HomeScreen() {
+  const { routines } = useRoutines()
+
   return (
     <Container>
-      <View>
-        <Text
-          style={{
-            fontSize: 24,
-            color: '#efefef',
-            fontWeight: 'bold',
-            textAlign: 'center',
-            opacity: 0.8,
-          }}
-        >HomeScreen</Text>
+      <Title text='Rutinas' />
 
-        <Link href={`/routine/1`}>
-          <Text>
-            Ver rutina
-          </Text>
-        </Link>
-
-        <Link href={`/workout/1`}>
-          <Text>
-            Ver entreno
-          </Text>
-        </Link>
-      </View>
+      {routines.length > 0 ? (
+        <RoutinesList
+          routines={routines}
+        />
+      ) : (
+        <Text style={styles.emptyMessage}>
+          No hay rutinas hechas recientemente.
+        </Text>
+      )}
     </Container>
   )
 }
+
+const styles = StyleSheet.create({
+  emptyMessage: {
+    color: '#cbcbcb',
+    textAlign: 'center',
+    marginVertical: 20,
+    fontSize: 16,
+  }
+})

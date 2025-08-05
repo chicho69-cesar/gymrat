@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 import { Text } from 'tamagui'
 
 import RoutinesList from 'presentation/components/routines/routines-list'
@@ -9,7 +9,28 @@ import Title from 'presentation/components/ui/title'
 import useRoutines from 'presentation/hooks/use-routines'
 
 export default function RoutineSettingsScreen() {
-  const { loading, routines, refresh } = useRoutines()
+  const { loading, routines, refresh, deleteRoutine } = useRoutines()
+
+  const handleDelete = (routineId: string) => {
+    Alert.alert(
+      'Confirm Delete',
+      '¿Estas seguro de eliminar esta rutina?',
+      [
+        {
+          text: 'Canelar',
+          style: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteRoutine(routineId)
+            refresh()
+          },
+        },
+      ]
+    )
+  }
 
   return (
     <Container>
@@ -30,6 +51,7 @@ export default function RoutineSettingsScreen() {
           onRefresh={() => {
             refresh()
           }}
+          onDelete={handleDelete}
         />
       ) : (
         <Text style={styles.emptyMessage}>

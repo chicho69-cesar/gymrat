@@ -82,6 +82,7 @@ export default function useWorkoutDays() {
       }
 
       await fetchWorkoutDays()
+      setWorkoutDayExercises([])
     } catch (error) {
       console.error('Failed to create/update workout day:', error)
       setError('Failed to create/update workout day')

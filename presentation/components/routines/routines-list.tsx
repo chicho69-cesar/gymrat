@@ -8,9 +8,10 @@ import { Routine } from 'domain/entities/routine.entity'
 interface RoutinesListProps {
   routines: Routine[]
   onRefresh?: () => void
+  onDelete?: (routineId: string) => void
 }
 
-export default function RoutinesList({ routines, onRefresh }: RoutinesListProps) {
+export default function RoutinesList({ routines, onRefresh, onDelete }: RoutinesListProps) {
   const theme = useTheme()
   const [isRefreshing, setIsRefreshing] = useState(false)
 
@@ -46,6 +47,7 @@ export default function RoutinesList({ routines, onRefresh }: RoutinesListProps)
             }
           ]}
           onPress={() => router.push(`/routine/${item.id}`)}
+          onLongPress={() => onDelete?.(item.id)}
         >
           <Text
             style={[

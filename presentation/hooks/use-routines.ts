@@ -82,6 +82,7 @@ export default function useRoutines() {
       }
 
       await fetchRoutines()
+      setRoutineCircuits([])
     } catch (error) {
       console.error('Failed to create/update routine:', error)
       setError('Failed to create/update routine')

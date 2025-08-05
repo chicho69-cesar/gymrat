@@ -263,67 +263,75 @@ export default function RoutineSettingsScreen() {
         )}
       </View>
 
-      {selectedWorkoutDays.length > 0 && (
-        <View>
-          <Label style={{ fontSize: 12, fontWeight: '600' }}>
-            Días en esta rutina ({selectedWorkoutDays.length})
-          </Label>
+      {loading ? (
+        <Text style={{ textAlign: 'center', color: theme.accent10.val || '#6b7280' }}>
+          Cargando ejercicios...
+        </Text>
+      ) : (
+        <>
+          {selectedWorkoutDays.length > 0 && (
+            <View>
+              <Label style={{ fontSize: 12, fontWeight: '600' }}>
+                Días en esta rutina ({selectedWorkoutDays.length})
+              </Label>
 
-          {selectedWorkoutDays.map((selectedWorkoutDay, index) => (
-            <View
-              key={`${selectedWorkoutDay.workoutDayId}-${index}`}
-              style={{
-                borderWidth: 1,
-                borderColor: theme.red4.val || '#fca5a5',
-                marginBottom: 16,
-                padding: 12,
-                borderRadius: 8,
-              }}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                <View style={{ flex: 1, flexDirection: 'column', gap: 4 }}>
-                  <Text style={{ fontSize: 14, fontWeight: '600', color: theme.red11.val || '#b91c1c' }}>
-                    {selectedWorkoutDay.workoutDayName}
-                  </Text>
+              {selectedWorkoutDays.map((selectedWorkoutDay, index) => (
+                <View
+                  key={`${selectedWorkoutDay.workoutDayId}-${index}`}
+                  style={{
+                    borderWidth: 1,
+                    borderColor: theme.red4.val || '#fca5a5',
+                    marginBottom: 16,
+                    padding: 12,
+                    borderRadius: 8,
+                  }}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <View style={{ flex: 1, flexDirection: 'column', gap: 4 }}>
+                      <Text style={{ fontSize: 14, fontWeight: '600', color: theme.red11.val || '#b91c1c' }}>
+                        {selectedWorkoutDay.workoutDayName}
+                      </Text>
 
-                  <Text style={{ fontSize: 12, color: theme.accent10.val || '#efefef' }}>
-                    Día {selectedWorkoutDay.orderNumber}
-                  </Text>
+                      <Text style={{ fontSize: 12, color: theme.accent10.val || '#efefef' }}>
+                        Día {selectedWorkoutDay.orderNumber}
+                      </Text>
+                    </View>
+
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                      <Button
+                        size='$2'
+                        circular
+                        icon={ArrowUp}
+                        bg='$blue8'
+                        disabled={index === 0}
+                        opacity={index === 0 ? 0.5 : 1}
+                        onPress={() => moveWorkoutDay(index, 'up')}
+                      />
+
+                      <Button
+                        size='$2'
+                        circular
+                        icon={ArrowDown}
+                        bg='$blue8'
+                        disabled={index === selectedWorkoutDays.length - 1}
+                        opacity={index === selectedWorkoutDays.length - 1 ? 0.5 : 1}
+                        onPress={() => moveWorkoutDay(index, 'down')}
+                      />
+
+                      <Button
+                        size='$2'
+                        circular
+                        icon={Trash2}
+                        bg='$red8'
+                        onPress={() => removeWorkoutDay(index)}
+                      />
+                    </View>
+                  </View>
                 </View>
-
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                  <Button
-                    size='$2'
-                    circular
-                    icon={ArrowUp}
-                    bg='$blue8'
-                    disabled={index === 0}
-                    opacity={index === 0 ? 0.5 : 1}
-                    onPress={() => moveWorkoutDay(index, 'up')}
-                  />
-
-                  <Button
-                    size='$2'
-                    circular
-                    icon={ArrowDown}
-                    bg='$blue8'
-                    disabled={index === selectedWorkoutDays.length - 1}
-                    opacity={index === selectedWorkoutDays.length - 1 ? 0.5 : 1}
-                    onPress={() => moveWorkoutDay(index, 'down')}
-                  />
-
-                  <Button
-                    size='$2'
-                    circular
-                    icon={Trash2}
-                    bg='$red8'
-                    onPress={() => removeWorkoutDay(index)}
-                  />
-                </View>
-              </View>
+              ))}
             </View>
-          ))}
-        </View>
+          )}
+        </>
       )}
 
       <View style={{ marginTop: 16, flexDirection: 'column', gap: 12 }}>

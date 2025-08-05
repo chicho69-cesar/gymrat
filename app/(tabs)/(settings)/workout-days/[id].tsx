@@ -249,71 +249,79 @@ export default function WorkoutDaysScreen() {
         )}
       </View>
 
-      {selectedExercises.length > 0 && (
-        <View>
-          <Label style={{ fontSize: 12, fontWeight: '600' }}>
-            Ejercicios en este día ({selectedExercises.length})
-          </Label>
+      {loading ? (
+        <Text style={{ textAlign: 'center', color: theme.accent10.val || '#6b7280' }}>
+          Cargando ejercicios...
+        </Text>
+      ) : (
+        <>
+          {selectedExercises.length > 0 && (
+            <View>
+              <Label style={{ fontSize: 12, fontWeight: '600' }}>
+                Ejercicios en este día ({selectedExercises.length})
+              </Label>
 
-          {selectedExercises.map((selectedExercise, index) => (
-            <View
-              key={`${selectedExercise.exerciseId}-${index}`}
-              style={{
-                borderWidth: 1,
-                borderColor: theme.red4.val || '#fca5a5',
-                marginBottom: 16,
-                padding: 12,
-                borderRadius: 8,
-              }}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: theme.red11.val || '#b91c1c' }}>
-                  {selectedExercise.exerciseName}
-                </Text>
+              {selectedExercises.map((selectedExercise, index) => (
+                <View
+                  key={`${selectedExercise.exerciseId}-${index}`}
+                  style={{
+                    borderWidth: 1,
+                    borderColor: theme.red4.val || '#fca5a5',
+                    marginBottom: 16,
+                    padding: 12,
+                    borderRadius: 8,
+                  }}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <Text style={{ fontSize: 14, fontWeight: '600', color: theme.red11.val || '#b91c1c' }}>
+                      {selectedExercise.exerciseName}
+                    </Text>
 
-                <Button
-                  size='$2'
-                  circular
-                  icon={Trash2}
-                  bg='$red8'
-                  onPress={() => removeExercise(index)}
-                />
-              </View>
+                    <Button
+                      size='$2'
+                      circular
+                      icon={Trash2}
+                      bg='$red8'
+                      onPress={() => removeExercise(index)}
+                    />
+                  </View>
 
-              <View style={{ flexDirection: 'row', gap: 12 }}>
-                <View style={{ flex: 1 }}>
-                  <Label style={{ fontSize: 12, fontWeight: '600', color: theme.accent10.val || '#6b7280' }}>
-                    Sets
-                  </Label>
+                  <View style={{ flexDirection: 'row', gap: 12 }}>
+                    <View style={{ flex: 1 }}>
+                      <Label style={{ fontSize: 12, fontWeight: '600', color: theme.accent10.val || '#6b7280' }}>
+                        Sets
+                      </Label>
 
-                  <Input
-                    value={selectedExercise.sets.toString()}
-                    onChangeText={(text) => updateExerciseData(index, 'sets', parseInt(text) || 0)}
-                    keyboardType='numeric'
-                    focusStyle={{
-                      borderColor: '$red8'
-                    }}
-                  />
+                      <Input
+                        value={selectedExercise.sets.toString()}
+                        onChangeText={(text) => updateExerciseData(index, 'sets', parseInt(text) || 0)}
+                        keyboardType='numeric'
+                        focusStyle={{
+                          borderColor: '$red8'
+                        }}
+                      />
+                    </View>
+
+                    <View style={{ flex: 1 }}>
+                      <Label style={{ fontSize: 12, fontWeight: '600', color: theme.accent10.val || '#6b7280' }}>
+                        Sets de calentamiento
+                      </Label>
+
+                      <Input
+                        value={selectedExercise.heatingSets.toString()}
+                        onChangeText={(text) => updateExerciseData(index, 'heatingSets', parseInt(text) || 0)}
+                        keyboardType='numeric'
+                        focusStyle={{
+                          borderColor: '$red8'
+                        }}
+                      />
+                    </View>
+                  </View>
                 </View>
-
-                <View style={{ flex: 1 }}>
-                  <Label style={{ fontSize: 12, fontWeight: '600', color: theme.accent10.val || '#6b7280' }}>
-                    Sets de calentamiento
-                  </Label>
-
-                  <Input
-                    value={selectedExercise.heatingSets.toString()}
-                    onChangeText={(text) => updateExerciseData(index, 'heatingSets', parseInt(text) || 0)}
-                    keyboardType='numeric'
-                    focusStyle={{
-                      borderColor: '$red8'
-                    }}
-                  />
-                </View>
-              </View>
+              ))}
             </View>
-          ))}
-        </View>
+          )}
+        </>
       )}
 
       <View style={{ marginTop: 16, flexDirection: 'column', gap: 12 }}>

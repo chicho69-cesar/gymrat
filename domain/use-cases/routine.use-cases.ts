@@ -21,16 +21,22 @@ export class RoutineUseCases {
     routine: RoutineDto,
     circuitWorkouts: CircuitWorkout[] = []
   ): Promise<Routine> {
-    const circuitWorkoutPromises = circuitWorkouts
-      .map((circuitWorkout) => repository.createCircuitWorkout(
-        CircuitWorkoutMapper.toDto(circuitWorkout)
-      ))
+    const createdRoutine = await repository.createRoutine(routine)
 
-    if (circuitWorkouts.length > 0) {
+    const circuitWorkoutPromises = circuitWorkouts.map((circuit) => {
+      return repository.createCircuitWorkout(
+        CircuitWorkoutMapper.toDto({
+          ...circuit,
+          routineId: createdRoutine.id,
+        })
+      )
+    })
+
+    if (circuitWorkoutPromises.length > 0) {
       await Promise.all(circuitWorkoutPromises)
     }
 
-    return repository.createRoutine(routine)
+    return createdRoutine
   }
 
   static async update(
@@ -39,15 +45,36 @@ export class RoutineUseCases {
     routine: RoutineDto,
     circuitWorkouts: CircuitWorkout[] = []
   ): Promise<Routine> {
-    const circuitWorkoutPromises = circuitWorkouts.map((cw) => repository.updateCircuitWorkout(
-      cw.id, CircuitWorkoutMapper.toDto(cw)
-    ))
+    const updatedRoutine = await repository.updateRoutine(id, routine)
+
+    const existingCircuitWorkouts = await repository.getCircuitWorkout(id)
+    const existingCircuitWorkoutIds = new Set(existingCircuitWorkouts.map((cw) => cw.id))
+
+    const updatedCircuitWorkouts = circuitWorkouts.filter((cw) => cw.id !== 'new' && existingCircuitWorkoutIds.has(cw.id))
+    const circuitWorkoutsToDelete = existingCircuitWorkouts.filter((cw) => !updatedCircuitWorkouts.some((ucw) => ucw.id === cw.id))
+
+    if (circuitWorkoutsToDelete.length > 0) {
+      await Promise.all(circuitWorkoutsToDelete.map((cw) => repository.deleteCircuitWorkout(cw.id)))
+    }
+
+    const circuitWorkoutPromises = updatedCircuitWorkouts.map((circuit) => {
+      if (circuit.id === 'new') {
+        return repository.createCircuitWorkout(
+          CircuitWorkoutMapper.toDto({
+            ...circuit,
+            routineId: updatedRoutine.id,
+          })
+        )
+      } else {
+        return repository.updateCircuitWorkout(circuit.id, CircuitWorkoutMapper.toDto(circuit))
+      }
+    })
 
     if (circuitWorkouts.length > 0) {
       await Promise.all(circuitWorkoutPromises)
     }
 
-    return repository.updateRoutine(id, routine)
+    return updatedRoutine
   }
 
   static async delete(repository: RoutineRepository, id: string): Promise<void> {

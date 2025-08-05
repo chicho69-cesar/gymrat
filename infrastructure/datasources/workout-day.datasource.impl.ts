@@ -119,14 +119,12 @@ export class WorkoutDayDatasourceImpl implements WorkoutDayDataSource {
 
   async getWorkoutDayExercisesByWorkoutDayId(workoutDayId: string): Promise<WorkoutDayExercise[]> {
     try {
-      console.log('Fetching workout day exercises for workout day ID:', workoutDayId)
       const exercises = await this.db.getAllAsync<WorkoutDayExercise>(
         /* sql */`
           SELECT * FROM WorkoutDayExercise WHERE workoutDayId = ?
         `,
         [workoutDayId]
       )
-      console.log('Fetched workout day exercises:', exercises)
 
       return exercises
     } catch (error) {

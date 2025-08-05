@@ -49,8 +49,6 @@ export default function WorkoutDaysScreen() {
       description: foundWorkoutDay.description,
     })
 
-    console.log('Fetching exercises for workout day:', id)
-
     if (typeof id === 'string') {
       fetchWorkoutDayExercises(id)
     }
@@ -269,9 +267,7 @@ export default function WorkoutDaysScreen() {
               }}
             >
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                <Text
-                  style={{ fontSize: 14, fontWeight: '600', color: theme.red11.val || '#b91c1c' }}
-                >
+                <Text style={{ fontSize: 14, fontWeight: '600', color: theme.red11.val || '#b91c1c' }}>
                   {selectedExercise.exerciseName}
                 </Text>
 

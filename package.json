@@ -1,27 +1,19 @@
 {
-  "name": "gymrat-app",
+  "name": "gymrat",
   "main": "expo-router/entry",
   "version": "1.0.0",
-  "packageManager": "yarn@4.5.0",
-  "private": true,
   "scripts": {
-    "upgrade:tamagui": "yarn up '*tamagui*'@latest '@tamagui/*'@latest",
-    "upgrade:tamagui:canary": "yarn up '*tamagui*'@canary '@tamagui/*'@canary",
-    "check:tamagui": "tamagui check",
-    "start": "expo start -c",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web",
-    "test": "jest --watchAll"
-  },
-  "jest": {
-    "preset": "jest-expo"
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
   },
   "dependencies": {
     "@expo/vector-icons": "14.1.0",
     "@react-navigation/native": "^7.1.6",
     "@tamagui/config": "1.132.11",
     "@tamagui/lucide-icons": "1.132.11",
+    "@tamagui/portal": "1.132.11",
     "@tamagui/toast": "1.132.11",
     "babel-preset-expo": "~13.0.0",
     "burnt": "0.12.2",
@@ -46,6 +38,7 @@
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
+    "react-native-svg-charts": "5.4.0",
     "react-native-web": "0.20.0",
     "tamagui": "1.132.11",
     "zustand": "5.0.7"
@@ -59,5 +52,6 @@
     "@tamagui/metro-plugin": "1.132.11",
     "@types/react": "~19.0.10",
     "typescript": "~5.8.3"
-  }
+  },
+  "private": true
 }

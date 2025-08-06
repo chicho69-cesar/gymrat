@@ -8,6 +8,7 @@ import { StatusBar } from 'expo-status-bar'
 import { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
 import { TamaguiProvider } from 'tamagui'
+import { PortalProvider } from '@tamagui/portal'
 
 import { DATABASE_NAME } from 'data/constants'
 import { migrateDB } from 'data/migrate-db'
@@ -41,24 +42,26 @@ export default function RootLayout() {
   }
 
   return (
-    <SQLite.SQLiteProvider databaseName={DATABASE_NAME} onInit={migrateDB}>
-      <TamaguiProvider
-        config={config}
-        defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}
-      >
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-
-          <Stack>
-            <Stack.Screen
-              name='(tabs)'
-              options={{
-                headerShown: false,
-              }}
-            />
-          </Stack>
-        </ThemeProvider>
-      </TamaguiProvider>
-    </SQLite.SQLiteProvider>
+    <PortalProvider>
+      <SQLite.SQLiteProvider databaseName={DATABASE_NAME} onInit={migrateDB}>
+        <TamaguiProvider
+          config={config}
+          defaultTheme={colorScheme === 'dark' ? 'dark' : 'light'}
+        >
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+  
+            <Stack>
+              <Stack.Screen
+                name='(tabs)'
+                options={{
+                  headerShown: false,
+                }}
+              />
+            </Stack>
+          </ThemeProvider>
+        </TamaguiProvider>
+      </SQLite.SQLiteProvider>
+    </PortalProvider>
   )
 }

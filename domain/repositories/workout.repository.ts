@@ -4,6 +4,7 @@ import { ExerciseSet, Workout, WorkoutExercise } from 'domain/entities/workout.e
 export abstract class WorkoutRepository {
   abstract getWorkoutById(id: string): Promise<Workout | null>
   abstract getAllWorkout(): Promise<Workout[]>
+  abstract getWorkoutByRoutineId(routineId: string): Promise<Workout[]>
   abstract createWorkout(workout: WorkoutDto): Promise<Workout>
   abstract updateWorkout(id: string, workout: WorkoutDto): Promise<Workout>
   abstract deleteWorkout(id: string): Promise<void>

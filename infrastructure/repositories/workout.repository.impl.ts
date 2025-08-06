@@ -18,6 +18,10 @@ export class WorkoutRepositoryImpl implements WorkoutRepository {
     return this.datasource.getAllWorkout()
   }
 
+  getWorkoutByRoutineId(routineId: string): Promise<Workout[]> {
+    return this.datasource.getWorkoutByRoutineId(routineId)
+  }
+
   createWorkout(workout: WorkoutDto): Promise<Workout> {
     return this.datasource.createWorkout(workout)
   }

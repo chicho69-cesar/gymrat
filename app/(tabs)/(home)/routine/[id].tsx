@@ -1,77 +1,58 @@
 import { Activity, Plus } from '@tamagui/lucide-icons'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { StyleSheet } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 import { Button, Text, useTheme, View } from 'tamagui'
 
-import { WorkoutWithDay } from 'domain/entities/workout.entity'
 import Container from 'presentation/components/ui/container'
 import CustomLink from 'presentation/components/ui/custom-link'
+import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
 import Title from 'presentation/components/ui/title'
 import WorkoutList from 'presentation/components/workouts/workout-list'
 import useRoutines from 'presentation/hooks/use-routines'
-import useWorkoutDays from 'presentation/hooks/use-workout-days'
+import useWorkouts from 'presentation/hooks/use-workouts'
 
 export default function RoutineScreen() {
   const { id } = useLocalSearchParams()
   const theme = useTheme()
 
   const { routines } = useRoutines()
-  const { workoutDays } = useWorkoutDays()
+  const { workouts, loading, error, refresh, deleteWorkout } = useWorkouts(id as string)
 
   const [routine, setRoutine] = useState<any>(null)
-  const [workouts, setWorkouts] = useState<WorkoutWithDay[]>([])
 
   useEffect(() => {
     if (typeof id === 'string') {
       const foundRoutine = routines.find(r => r.id === id)
       setRoutine(foundRoutine)
-
-      // TODO: Implementar la lógica para obtener los workouts de la rutina
-      // Por ahora uso datos de ejemplo
-      loadWorkouts()
     }
-  }, [id, routines, workoutDays])
+  }, [id, routines])
 
-  const loadWorkouts = async () => {
-    // TODO: Implementar la lógica real para cargar workouts de la rutina
-    // Datos de ejemplo por ahora
-    const exampleWorkouts: WorkoutWithDay[] = [
-      {
-        id: '1',
-        date: '05-08-2025',
-        routineId: typeof id === 'string' ? id : '',
-        workoutDayId: 'wd1',
-        workoutDayName: 'Push Day'
-      },
-      {
-        id: '2',
-        date: '03-08-2025',
-        routineId: typeof id === 'string' ? id : '',
-        workoutDayId: 'wd2',
-        workoutDayName: 'Pull Day'
-      },
-      {
-        id: '3',
-        date: '01-08-2025',
-        routineId: typeof id === 'string' ? id : '',
-        workoutDayId: 'wd3',
-        workoutDayName: 'Leg Day'
-      }
-    ]
+  useEffect(() => {
+    if (error) {
+      Alert.alert('Error', error, [{ text: 'OK' }])
+    }
+  }, [error])
 
-    // Ordenar por fecha (más reciente primero)
-    const sortedWorkouts = exampleWorkouts.sort((a, b) => {
-      const dateA = new Date(a.date.split('-').reverse().join('-'))
-      const dateB = new Date(b.date.split('-').reverse().join('-'))
-      return dateB.getTime() - dateA.getTime()
-    })
-
-    setWorkouts(sortedWorkouts)
-  }
-
-  const handleRefresh = async () => {
-    await loadWorkouts()
+  const handleDelete = async (workoutId: string) => {
+    Alert.alert(
+      'Confirm Delete',
+      '¿Estas seguro de eliminar este entrenamiento?',
+      [
+        {
+          text: 'Canelar',
+          style: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteWorkout(workoutId)
+            refresh()
+          },
+        },
+      ]
+    )
   }
 
   return (
@@ -104,10 +85,15 @@ export default function RoutineScreen() {
         # de Entrenamientos ({workouts.length})
       </Text>
 
-      {workouts.length > 0 ? (
+      {loading ? (
+        <FullScreenLoader />
+      ) : workouts.length > 0 ? (
         <WorkoutList
           workouts={workouts}
-          onRefresh={handleRefresh}
+          onRefresh={() => {
+            refresh()
+          }}
+          onDelete={handleDelete}
         />
       ) : (
         <View style={styles.emptyState}>

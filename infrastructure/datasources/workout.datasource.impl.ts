@@ -3,7 +3,7 @@ import { SQLiteDatabase } from 'expo-sqlite'
 import { generateId } from 'config/helpers/create-uuid'
 import { WorkoutDataSource } from 'domain/datasources/workout.datasource'
 import { ExerciseSetDto, WorkoutDto, WorkoutExerciseDto } from 'domain/dtos/workout.dto'
-import { ExerciseSet, Workout, WorkoutExercise } from 'domain/entities/workout.entity'
+import { ExerciseSet, Workout, WorkoutExercise, WorkoutWithDay } from 'domain/entities/workout.entity'
 import { ExerciseSetMapper } from 'infrastructure/mappers/exercise-set.mapper'
 import { WorkoutExerciseMapper } from 'infrastructure/mappers/workout-exercise.mapper'
 import { WorkoutMapper } from 'infrastructure/mappers/workout.mapper'
@@ -42,6 +42,28 @@ export class WorkoutDataSourceImpl implements WorkoutDataSource {
       return workouts
     } catch (error) {
       console.error('Error fetching all workouts:', error)
+      return []
+    }
+  }
+
+  async getWorkoutByRoutineId(routineId: string): Promise<WorkoutWithDay[]> {
+    try {
+      const workouts = await this.db.getAllAsync<WorkoutWithDay>(
+        /* sql */`
+          SELECT w.*, wd.name as workoutDayName
+          FROM Workout as w, WorkoutDay as wd
+          WHERE w.workoutDayId = wd.id AND w.routineId = ?
+          ORDER BY 
+            substr(w.date, 7, 4) DESC,  -- Year
+            substr(w.date, 4, 2) DESC,  -- Month  
+            substr(w.date, 1, 2) DESC   -- Day
+        `,
+        [routineId]
+      )
+
+      return workouts
+    } catch (error) {
+      console.error('Error fetching workouts by routine ID:', error)
       return []
     }
   }

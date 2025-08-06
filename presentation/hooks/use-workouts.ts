@@ -7,7 +7,7 @@ import { WorkoutRepositoryImpl } from 'infrastructure/repositories/workout.repos
 import { useWorkoutStore } from 'presentation/store/workouts.store'
 import { useDatabase } from './use-database'
 
-export default function useWorkouts() {
+export default function useWorkouts(routineId: string) {
   const { db } = useDatabase()
   const workoutDataSource = new WorkoutDataSourceImpl(db)
   const workoutRepository = new WorkoutRepositoryImpl(workoutDataSource)
@@ -28,7 +28,7 @@ export default function useWorkouts() {
     setError(null)
 
     try {
-      const fetchedWorkouts = await WorkoutUseCases.getAll(workoutRepository)
+      const fetchedWorkouts = await WorkoutUseCases.getByRoutineId(workoutRepository, routineId)
       setWorkouts(fetchedWorkouts)
     } catch (error) {
       console.error('Failed to fetch workouts:', error)

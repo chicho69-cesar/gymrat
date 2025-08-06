@@ -11,6 +11,10 @@ export class WorkoutUseCases {
     return repository.getAllWorkout()
   }
 
+  static async getByRoutineId(repository: WorkoutRepository, routineId: string): Promise<Workout[]> {
+    return repository.getWorkoutByRoutineId(routineId)
+  }
+
   static async create(repository: WorkoutRepository, workout: WorkoutDto): Promise<Workout> {
     return repository.createWorkout(workout)
   }

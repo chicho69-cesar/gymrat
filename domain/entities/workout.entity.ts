@@ -5,6 +5,10 @@ export interface Workout {
   workoutDayId: string
 }
 
+export interface WorkoutWithDay extends Workout {
+  workoutDayName?: string
+}
+
 export interface WorkoutExercise {
   id: string
   workoutId: string

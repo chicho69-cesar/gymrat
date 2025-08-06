@@ -1,45 +1,45 @@
-import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet } from 'react-native';
-import { LineChart } from 'react-native-svg-charts';
-import { Text, useTheme, View, XStack, YStack, Card } from 'tamagui';
-import { BarChart3, Dumbbell, TrendingUp, Calendar, Weight, Target } from '@tamagui/lucide-icons';
+import { BarChart3, Calendar, Dumbbell, Target, TrendingUp, Weight } from '@tamagui/lucide-icons'
+import { useLocalSearchParams } from 'expo-router'
+import { useEffect, useState } from 'react'
+import { Dimensions, ScrollView, StyleSheet } from 'react-native'
+import { LineChart } from 'react-native-svg-charts'
+import { Card, Text, useTheme, View, XStack, YStack } from 'tamagui'
 
-import { TimesHelper } from 'config/helpers/times';
-import { Exercise } from 'domain/entities/exercise.entity';
-import Container from 'presentation/components/ui/container';
-import Title from 'presentation/components/ui/title';
-import useExercises from 'presentation/hooks/use-exercises';
+import { TimesHelper } from 'config/helpers/times'
+import { Exercise } from 'domain/entities/exercise.entity'
+import Container from 'presentation/components/ui/container'
+import Title from 'presentation/components/ui/title'
+import useExercises from 'presentation/hooks/use-exercises'
 
 interface WorkoutStats {
-  date: string;
-  weight: number;
-  reps: number;
-  unit: 'Kg' | 'LB';
-  volume: number;
-  workoutId: string;
+  date: string
+  weight: number
+  reps: number
+  unit: 'Kg' | 'LB'
+  volume: number
+  workoutId: string
 }
 
 export default function WorkoutStatsScreen() {
-  const { id } = useLocalSearchParams();
-  const theme = useTheme();
-  const { exercises } = useExercises();
-  
-  const [exercise, setExercise] = useState<Exercise | null>(null);
-  const [workoutStats, setWorkoutStats] = useState<WorkoutStats[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { id } = useLocalSearchParams()
+  const theme = useTheme()
+  const { exercises } = useExercises()
+
+  const [exercise, setExercise] = useState<Exercise | null>(null)
+  const [workoutStats, setWorkoutStats] = useState<WorkoutStats[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (typeof id === 'string') {
-      loadExerciseStats();
+      loadExerciseStats()
     }
-  }, [id, exercises]);
+  }, [id, exercises])
 
   const loadExerciseStats = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const foundExercise = exercises.find(ex => ex.id === id);
-      setExercise(foundExercise || null);
+      const foundExercise = exercises.find(ex => ex.id === id)
+      setExercise(foundExercise || null)
 
       // Example data (same as provided)
       const exampleStats: WorkoutStats[] = [
@@ -51,49 +51,49 @@ export default function WorkoutStatsScreen() {
         { date: '19-07-2025', weight: 80, reps: 8, unit: 'Kg', volume: 640, workoutId: 'w6' },
         { date: '22-07-2025', weight: 80, reps: 10, unit: 'Kg', volume: 800, workoutId: 'w7' },
         { date: '26-07-2025', weight: 82.5, reps: 10, unit: 'Kg', volume: 825, workoutId: 'w8' },
-      ];
+      ]
 
       const sortedStats = exampleStats.sort((a, b) => {
-        const dateA = new Date(a.date.split('-').reverse().join('-'));
-        const dateB = new Date(b.date.split('-').reverse().join('-'));
-        return dateA.getTime() - dateB.getTime();
-      });
+        const dateA = new Date(a.date.split('-').reverse().join('-'))
+        const dateB = new Date(b.date.split('-').reverse().join('-'))
+        return dateA.getTime() - dateB.getTime()
+      })
 
-      setWorkoutStats(sortedStats);
+      setWorkoutStats(sortedStats)
     } catch (error) {
-      console.error('Error loading exercise stats:', error);
+      console.error('Error loading exercise stats:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const formatDate = (dateString: string) => {
-    const [day, month] = dateString.split('-');
-    return `${day}/${month}`;
-  };
+    const [day, month] = dateString.split('-')
+    return `${day}/${month}`
+  }
 
   const getChartData = () => {
-    if (workoutStats.length === 0) return [];
-    return workoutStats.map(stat => stat.volume);
-  };
+    if (workoutStats.length === 0) return []
+    return workoutStats.map(stat => stat.volume)
+  }
 
   const getWeightChartData = () => {
-    if (workoutStats.length === 0) return [];
-    return workoutStats.map(stat => stat.weight);
-  };
+    if (workoutStats.length === 0) return []
+    return workoutStats.map(stat => stat.weight)
+  }
 
   const getStats = () => {
-    if (workoutStats.length === 0) return null;
+    if (workoutStats.length === 0) return null
 
-    const latestStat = workoutStats[workoutStats.length - 1];
-    const firstStat = workoutStats[0];
-    
-    const maxVolume = Math.max(...workoutStats.map(s => s.volume));
-    const maxWeight = Math.max(...workoutStats.map(s => s.weight));
-    const avgVolume = workoutStats.reduce((sum, s) => sum + s.volume, 0) / workoutStats.length;
-    
-    const weightProgress = latestStat.weight - firstStat.weight;
-    const volumeProgress = latestStat.volume - firstStat.volume;
+    const latestStat = workoutStats[workoutStats.length - 1]
+    const firstStat = workoutStats[0]
+
+    const maxVolume = Math.max(...workoutStats.map(s => s.volume))
+    const maxWeight = Math.max(...workoutStats.map(s => s.weight))
+    const avgVolume = workoutStats.reduce((sum, s) => sum + s.volume, 0) / workoutStats.length
+
+    const weightProgress = latestStat.weight - firstStat.weight
+    const volumeProgress = latestStat.volume - firstStat.volume
 
     return {
       current: latestStat,
@@ -103,14 +103,14 @@ export default function WorkoutStatsScreen() {
       weightProgress,
       volumeProgress,
       totalWorkouts: workoutStats.length,
-    };
-  };
+    }
+  }
 
-  const stats = getStats();
-  const volumeData = getChartData();
-  const weightData = getWeightChartData();
-  const labels = workoutStats.map(stat => formatDate(stat.date));
-  const screenWidth = Dimensions.get('window').width;
+  const stats = getStats()
+  const volumeData = getChartData()
+  const weightData = getWeightChartData()
+  const labels = workoutStats.map(stat => formatDate(stat.date))
+  const screenWidth = Dimensions.get('window').width
 
   if (loading) {
     return (
@@ -124,7 +124,7 @@ export default function WorkoutStatsScreen() {
           </View>
         </YStack>
       </Container>
-    );
+    )
   }
 
   if (!exercise) {
@@ -139,7 +139,7 @@ export default function WorkoutStatsScreen() {
           </View>
         </YStack>
       </Container>
-    );
+    )
   }
 
   return (
@@ -330,7 +330,7 @@ export default function WorkoutStatsScreen() {
         </YStack>
       </ScrollView>
     </Container>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -339,4 +339,4 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 80,
     marginVertical: 8,
   },
-});
+})

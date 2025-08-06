@@ -1,3 +1,6 @@
+import { Exercise } from "./exercise.entity"
+import { WorkoutDayExercise } from "./workout-day.entity"
+
 export interface Workout {
   id: string
   date: string
@@ -22,4 +25,10 @@ export interface ExerciseSet {
   reps: number
   unit: 'Kg' | 'LB'
   setNumber: number
+}
+
+export interface WorkoutExerciseWithDetails extends WorkoutExercise {
+  exercise?: Exercise
+  workoutDayExercise?: WorkoutDayExercise
+  sets: ExerciseSet[]
 }

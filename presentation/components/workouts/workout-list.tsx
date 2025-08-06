@@ -1,10 +1,10 @@
 import { Activity, Calendar } from '@tamagui/lucide-icons'
-import { WorkoutWithDay } from 'domain/entities/workout.entity'
 import { router } from 'expo-router'
 import { useState } from 'react'
 import { FlatList, Pressable, RefreshControl, StyleSheet } from 'react-native'
 import { Text, useTheme, View } from 'tamagui'
 
+import { WorkoutWithDay } from 'domain/entities/workout.entity'
 import { TimesHelper } from '../../../config/helpers/times'
 
 interface WorkoutListProps {

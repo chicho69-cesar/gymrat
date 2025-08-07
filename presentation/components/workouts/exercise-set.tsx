@@ -1,6 +1,7 @@
 import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
 import { ExerciseSet as ExerciseSetType } from 'domain/entities/workout.entity'
-import { Input, Label, Select, Text, useTheme, View } from 'tamagui'
+import { Adapt, Input, Label, Select, Sheet, Text, useTheme, View } from 'tamagui'
+import { LinearGradient } from 'tamagui/linear-gradient'
 
 interface ExerciseSetProps {
   set: ExerciseSetType
@@ -31,7 +32,6 @@ export default function ExerciseSet({
         alignItems: 'flex-start',
         padding: 12,
         borderRadius: 8,
-        marginBottom: 8,
         gap: 8,
         width: '100%',
         borderWidth: 1,
@@ -80,46 +80,82 @@ export default function ExerciseSet({
             value={set.unit}
             onValueChange={(value) => updateExerciseSet(exerciseIndex, setIndex, 'unit', value)}
           >
-            <Select.Trigger iconAfter={ChevronDown} size='$2'>
-              <Select.Value />
+            <Select.Trigger iconAfter={ChevronDown}>
+              <Select.Value placeholder='Selecciona la unidad de medida...' />
             </Select.Trigger>
 
-            <Select.Adapt when='sm' platform='touch'>
-              <Select.Sheet modal dismissOnSnapToBottom>
-                <Select.Sheet.Frame>
-                  {/* <Select.SheetContents /> */}
-                </Select.Sheet.Frame>
-                <Select.Sheet.Overlay />
-              </Select.Sheet>
-            </Select.Adapt>
+            <Adapt when='maxMd' platform='touch'>
+              <Sheet native modal dismissOnSnapToBottom animation='medium'>
+                <Sheet.Frame>
+                  <Sheet.ScrollView>
+                    <Adapt.Contents />
+                  </Sheet.ScrollView>
+                </Sheet.Frame>
+
+                <Sheet.Overlay
+                  bg='$shadowColor'
+                  animation='lazy'
+                  enterStyle={{ opacity: 0 }}
+                  exitStyle={{ opacity: 0 }}
+                />
+              </Sheet>
+            </Adapt>
 
             <Select.Content zIndex={200000}>
-              <Select.ScrollUpButton >
-                <View >
+              <Select.ScrollUpButton
+                style={{
+                  position: 'relative',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                  height: 24,
+                }}
+              >
+                <View style={{ zIndex: 10 }}>
                   <ChevronUp size={20} />
                 </View>
+
+                <LinearGradient
+                  start={[0, 0]}
+                  end={[0, 1]}
+                  fullscreen
+                  colors={['$accent10', 'transparent']}
+                  style={{
+                    borderRadius: 8,
+                  }}
+                />
               </Select.ScrollUpButton>
 
-              <Select.Viewport >
+              <Select.Viewport
+                style={{
+                  minWidth: 200,
+                }}
+              >
                 <Select.Group>
-                  <Select.Item index={1} value='Kg'>
-                    <Select.ItemText>Kg</Select.ItemText>
+                  <Select.Item index={1} value={'Kg'}>
+                    <Select.ItemText style={{ fontSize: 14 }}>
+                      Kg
+                    </Select.ItemText>
+
                     <Select.ItemIndicator marginLeft='auto'>
-                      <Check size={16} />
+                      <Check size={16} color='$accent10' />
                     </Select.ItemIndicator>
                   </Select.Item>
 
-                  <Select.Item index={2} value='LB'>
-                    <Select.ItemText>LB</Select.ItemText>
+                  <Select.Item index={2} value={'LB'}>
+                    <Select.ItemText style={{ fontSize: 14 }}>
+                      LB
+                    </Select.ItemText>
+
                     <Select.ItemIndicator marginLeft='auto'>
-                      <Check size={16} />
+                      <Check size={16} color='$accent10' />
                     </Select.ItemIndicator>
                   </Select.Item>
                 </Select.Group>
               </Select.Viewport>
 
               <Select.ScrollDownButton>
-                <View>
+                <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', height: 24 }}>
                   <ChevronDown size={20} />
                 </View>
               </Select.ScrollDownButton>

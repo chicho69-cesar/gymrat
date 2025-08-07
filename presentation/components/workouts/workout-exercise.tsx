@@ -47,9 +47,42 @@ export default function WorkoutExercise({ exerciseIndex, workoutExercise, update
             Sets de calentamiento
           </Text>
 
-          {Array.from({ length: heatingSets }, (_, index) => {
+          <View style={{ flexDirection: 'column', gap: 8 }}>
+            {Array.from({ length: heatingSets }, (_, index) => {
+              const setData = workoutExercise.sets[index] || {
+                id: `heating-${index}`,
+                workoutExerciseId: workoutExercise.id,
+                weight: 0,
+                reps: 0,
+                unit: 'Kg' as const,
+                setNumber: index + 1
+              }
+
+              return (
+                <ExerciseSet
+                  key={setData.id}
+                  set={setData}
+                  setIndex={index}
+                  exerciseIndex={exerciseIndex}
+                  isHeatingSet={true}
+                  updateExerciseSet={updateExerciseSet}
+                  handleInputBlur={handleInputBlur}
+                />
+              )
+            })}
+          </View>
+        </View>
+      )}
+
+      <View style={{ marginBottom: 16 }}>
+        <Text fontSize='$5' fontWeight='700' color='$red11' style={{ marginBottom: 8 }}>
+          Sets de trabajo
+        </Text>
+
+        <View style={{ flexDirection: 'column', gap: 8 }}>
+          {Array.from({ length: totalSets }, (_, index) => {
             const setData = workoutExercise.sets[index] || {
-              id: `heating-${index}`,
+              id: `work-${index}`,
               workoutExerciseId: workoutExercise.id,
               weight: 0,
               reps: 0,
@@ -63,42 +96,13 @@ export default function WorkoutExercise({ exerciseIndex, workoutExercise, update
                 set={setData}
                 setIndex={index}
                 exerciseIndex={exerciseIndex}
-                isHeatingSet={true}
+                isHeatingSet={false}
                 updateExerciseSet={updateExerciseSet}
                 handleInputBlur={handleInputBlur}
               />
             )
           })}
         </View>
-      )}
-
-      <View style={{ marginBottom: 16 }}>
-        <Text fontSize='$5' fontWeight='700' color='$red11' style={{ marginBottom: 8 }}>
-          Sets de trabajo
-        </Text>
-
-        {Array.from({ length: totalSets }, (_, index) => {
-          const setData = workoutExercise.sets[index] || {
-            id: `work-${index}`,
-            workoutExerciseId: workoutExercise.id,
-            weight: 0,
-            reps: 0,
-            unit: 'Kg' as const,
-            setNumber: index + 1
-          }
-
-          return (
-            <ExerciseSet
-              key={setData.id}
-              set={setData}
-              setIndex={index}
-              exerciseIndex={exerciseIndex}
-              isHeatingSet={false}
-              updateExerciseSet={updateExerciseSet}
-              handleInputBlur={handleInputBlur}
-            />
-          )
-        })}
       </View>
     </View>
   )

@@ -143,6 +143,7 @@ export default function WorkoutScreen() {
       <View style={{ marginVertical: 16 }}>
         {workoutExercises.map((workoutExercise, index) =>
           <WorkoutExercise
+            key={workoutExercise.id}
             workoutExercise={workoutExercise}
             exerciseIndex={index}
             updateExerciseSet={updateExerciseSet}

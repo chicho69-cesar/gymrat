@@ -1,8 +1,9 @@
 import { router } from 'expo-router'
 import { useState } from 'react'
 import { FlatList, Pressable, RefreshControl, StyleSheet } from 'react-native'
-import { Text, useTheme } from 'tamagui'
+import { Text, useTheme, View } from 'tamagui'
 
+import { Dumbbell } from '@tamagui/lucide-icons'
 import { TimesHelper } from 'config/helpers/times'
 import { Exercise } from 'domain/entities/exercise.entity'
 
@@ -33,7 +34,7 @@ export default function ExerciseList({ exercises, onRefresh, onDelete }: Exercis
           }}
         />
       }
-      renderItem={({ item }) => (
+      renderItem={({ item, index }) => (
         <Pressable
           style={({ pressed }) => [
             styles.exerciseItem,
@@ -50,41 +51,55 @@ export default function ExerciseList({ exercises, onRefresh, onDelete }: Exercis
           onPress={() => router.push(`/exercises/${item.id}`)}
           onLongPress={() => onDelete?.(item.id)}
         >
-          <Text
-            style={[
-              styles.exerciseName,
-              { color: theme.red10.val || '#f87171' }
-            ]}
-          >
-            {item.name}
-          </Text>
-
-          <Text
-            style={[
-              styles.exerciseDescription,
-              { color: theme.accent8.val || '#d4d4d8' }
-            ]}
-          >
-            {item.description}
-          </Text>
-
-          <Text
-            style={[
-              styles.exerciseRest,
-              { color: theme.accent6.val || '#a1a1aa' }
-            ]}
-          >
-            <Text
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+            <View
               style={{
-                fontWeight: 'bold',
-                color: theme.red10.val || '#ef4444'
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+                backgroundColor: theme.red7?.val || '#fca5a5',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
             >
-              Descanso:{' '}
+              <Text
+                fontSize='$4'
+                fontWeight='700'
+                color='white'
+              >
+                {index + 1}
+              </Text>
+            </View>
+
+            <Dumbbell size={24} color='$red8' />
+          </View>
+
+          <View>
+            <Text
+              fontSize='$5'
+              fontWeight='700'
+              color='$red11'
+              numberOfLines={1}
+              mb='$1'
+            >
+              {item.name}
             </Text>
 
-            {TimesHelper.fromSecondsToMinutes(item.rest)}
-          </Text>
+            {item.description && (
+              <Text
+                fontSize='$4'
+                color={theme.gray11?.val || '#d4d4d8'}
+                numberOfLines={2}
+                mb='$2'
+              >
+                {item.description}
+              </Text>
+            )}
+
+            <Text fontSize='$2' color={theme.gray10?.val || '#a1a1aa'} fontWeight='bold'>
+              Descanso: {TimesHelper.fromSecondsToMinutes(item.rest)}
+            </Text>
+          </View>
         </Pressable>
       )}
       style={styles.container}

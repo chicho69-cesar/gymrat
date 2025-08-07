@@ -9,6 +9,7 @@ import { Exercise } from 'domain/entities/exercise.entity'
 import ExerciseHistoryHeader from 'presentation/components/stats/exercise-history-header'
 import Container from 'presentation/components/ui/container'
 import EmptyMessage from 'presentation/components/ui/empty-message'
+import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
 import Title from 'presentation/components/ui/title'
 import useExercises from 'presentation/hooks/use-exercises'
 
@@ -109,16 +110,7 @@ export default function HistoryScreen() {
 
   if (loading && usedExercises.length === 0) {
     return (
-      <Container>
-        <YStack space='$4'>
-          <Title text='Historial de ejercicios' />
-          <View>
-            <Text fontSize='$5' color={theme.gray10?.val || '#a1a1aa'}>
-              Cargando historial...
-            </Text>
-          </View>
-        </YStack>
-      </Container>
+      <FullScreenLoader />
     )
   }
 

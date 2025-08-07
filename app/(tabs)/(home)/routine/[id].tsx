@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Alert, StyleSheet } from 'react-native'
 import { Button, Text, useTheme, View } from 'tamagui'
 
+import { Routine } from 'domain/entities/routine.entity'
 import Container from 'presentation/components/ui/container'
 import CustomLink from 'presentation/components/ui/custom-link'
 import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
@@ -19,7 +20,7 @@ export default function RoutineScreen() {
   const { routines } = useRoutines()
   const { workouts, loading, error, refresh, deleteWorkout } = useWorkouts(id as string)
 
-  const [routine, setRoutine] = useState<any>(null)
+  const [routine, setRoutine] = useState<Routine | undefined>()
 
   useEffect(() => {
     if (typeof id === 'string') {

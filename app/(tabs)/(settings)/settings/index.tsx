@@ -3,6 +3,7 @@ import RoutinesList from 'presentation/components/routines/routines-list'
 import Container from 'presentation/components/ui/container'
 import CustomLink from 'presentation/components/ui/custom-link'
 import EmptyMessage from 'presentation/components/ui/empty-message'
+import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
 import Title from 'presentation/components/ui/title'
 import WorkoutDaysList from 'presentation/components/workout-days/workout-days-list'
 import useExercises from 'presentation/hooks/use-exercises'
@@ -10,9 +11,9 @@ import useRoutines from 'presentation/hooks/use-routines'
 import useWorkoutDays from 'presentation/hooks/use-workout-days'
 
 export default function SettingsScreen() {
-  const { topExercises } = useExercises()
-  const { lastRoutines } = useRoutines()
-  const { mostFrequents } = useWorkoutDays()
+  const { topExercises, loading: exercisesLoading } = useExercises()
+  const { lastRoutines, loading: routinesLoading } = useRoutines()
+  const { mostFrequents, loading: workoutsLoading } = useWorkoutDays()
 
   return (
     <Container>
@@ -27,7 +28,9 @@ export default function SettingsScreen() {
           iconPosition='right'
         />
 
-        {lastRoutines.length > 0 ? (
+        {routinesLoading ? (
+          <FullScreenLoader />
+        ) : lastRoutines.length > 0 ? (
           <RoutinesList routines={lastRoutines} />
         ) : (
           <EmptyMessage
@@ -48,7 +51,9 @@ export default function SettingsScreen() {
           iconPosition='right'
         />
 
-        {topExercises.length > 0 ? (
+        {exercisesLoading ? (
+          <FullScreenLoader />
+        ) : topExercises.length > 0 ? (
           <ExerciseList exercises={topExercises} />
         ) : (
           <EmptyMessage
@@ -69,7 +74,9 @@ export default function SettingsScreen() {
           iconPosition='right'
         />
 
-        {mostFrequents.length > 0 ? (
+        {workoutsLoading ? (
+          <FullScreenLoader />
+        ) : mostFrequents.length > 0 ? (
           <WorkoutDaysList workoutDays={mostFrequents} />
         ) : (
           <EmptyMessage

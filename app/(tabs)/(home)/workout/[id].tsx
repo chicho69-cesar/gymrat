@@ -6,6 +6,7 @@ import { Text, useTheme, View } from 'tamagui'
 
 import { ExerciseSet, WorkoutExerciseWithDetails } from 'domain/entities/workout.entity'
 import Container from 'presentation/components/ui/container'
+import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
 import Title from 'presentation/components/ui/title'
 import WorkoutExercise from 'presentation/components/workouts/workout-exercise'
 import useExercises from 'presentation/hooks/use-exercises'
@@ -112,13 +113,7 @@ export default function WorkoutScreen() {
 
   if (loading) {
     return (
-      <Container>
-        <View>
-          <Text fontSize='$5'>
-            Cargando entrenamiento...
-          </Text>
-        </View>
-      </Container>
+      <FullScreenLoader />
     )
   }
 

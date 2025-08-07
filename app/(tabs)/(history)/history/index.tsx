@@ -6,7 +6,9 @@ import { Text, useTheme, View, XStack, YStack } from 'tamagui'
 
 import { TimesHelper } from 'config/helpers/times'
 import { Exercise } from 'domain/entities/exercise.entity'
+import ExerciseHistoryHeader from 'presentation/components/stats/exercise-history-header'
 import Container from 'presentation/components/ui/container'
+import EmptyMessage from 'presentation/components/ui/empty-message'
 import Title from 'presentation/components/ui/title'
 import useExercises from 'presentation/hooks/use-exercises'
 
@@ -52,13 +54,13 @@ export default function HistoryScreen() {
         <XStack >
           {/* Ranking number */}
           <View
-            bg="$red8"
+            bg='$red8'
             height={32}
           >
             <Text
-              fontSize="$4"
-              fontWeight="700"
-              color="white"
+              fontSize='$4'
+              fontWeight='700'
+              color='white'
             >
               {index + 1}
             </Text>
@@ -68,10 +70,10 @@ export default function HistoryScreen() {
           <Dumbbell size={24} color='$red8' />
 
           {/* Exercise details */}
-          <YStack flex={1} space="$1">
+          <YStack flex={1} space='$1'>
             <Text
-              fontSize="$5"
-              fontWeight="700"
+              fontSize='$5'
+              fontWeight='700'
               color='$red11'
               numberOfLines={1}
             >
@@ -80,7 +82,7 @@ export default function HistoryScreen() {
 
             {item.description && (
               <Text
-                fontSize="$3"
+                fontSize='$3'
                 color={theme.gray11?.val || '#d4d4d8'}
                 numberOfLines={2}
               >
@@ -89,7 +91,7 @@ export default function HistoryScreen() {
             )}
 
             <XStack >
-              <Text fontSize="$2" color={theme.gray10?.val || '#a1a1aa'}>
+              <Text fontSize='$2' color={theme.gray10?.val || '#a1a1aa'}>
                 Descanso: {TimesHelper.fromSecondsToMinutes(item.rest)}
               </Text>
             </XStack>
@@ -105,55 +107,13 @@ export default function HistoryScreen() {
     </Pressable>
   )
 
-  const renderEmptyState = () => (
-    <View style={styles.emptyState}>
-      <Dumbbell size={64} color={theme.gray8?.val || '#71717a'} />
-      <Text
-        fontSize="$6"
-        fontWeight="600"
-        color={theme.gray10?.val || '#a1a1aa'}
-      >
-        No hay ejercicios en tu historial
-      </Text>
-      <Text
-        fontSize="$4"
-        color={theme.gray9?.val || '#84848a'}
-      >
-        Completa tu primer entrenamiento para ver las estadísticas de tus ejercicios
-      </Text>
-    </View>
-  )
-
-  const renderHeader = () => (
-    <YStack>
-      <Text
-        fontSize="$4"
-        color={theme.gray11?.val || '#d4d4d8'}
-      >
-        Aquí puedes ver todos los ejercicios que has utilizado en tus entrenamientos, ordenados por frecuencia de uso
-      </Text>
-
-      <XStack >
-        <Text fontSize="$5" fontWeight="600" color='$red11'>
-          Ejercicios utilizados ({usedExercises.length})
-        </Text>
-        <XStack>
-          <BarChart3 size={20} color='$red8' />
-          <Text fontSize="$3" color={theme.gray10?.val || '#a1a1aa'}>
-            Ver estadísticas
-          </Text>
-        </XStack>
-      </XStack>
-    </YStack>
-  )
-
   if (loading && usedExercises.length === 0) {
     return (
       <Container>
-        <YStack space="$4">
-          <Title text="Historial de ejercicios" />
+        <YStack space='$4'>
+          <Title text='Historial de ejercicios' />
           <View>
-            <Text fontSize="$5" color={theme.gray10?.val || '#a1a1aa'}>
+            <Text fontSize='$5' color={theme.gray10?.val || '#a1a1aa'}>
               Cargando historial...
             </Text>
           </View>
@@ -164,35 +124,39 @@ export default function HistoryScreen() {
 
   return (
     <Container>
-      <YStack space="$4" flex={1}>
-        <Title text="Historial de ejercicios" />
+      <Title text='Historial de ejercicios' />
 
-        {usedExercises.length > 0 ? (
-          <FlatList
-            data={usedExercises}
-            keyExtractor={(item) => item.id}
-            renderItem={renderExerciseItem}
-            ListHeaderComponent={renderHeader}
-            onRefresh={handleRefresh}
-            refreshing={isRefreshing}
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl
-                refreshing={isRefreshing}
-                onRefresh={handleRefresh}
-                tintColor={theme.red8?.val || '#b91c1c'}
-              />
-            }
-            style={styles.list}
-            contentContainerStyle={styles.listContent}
+      {usedExercises.length > 0 ? (
+        <FlatList
+          data={usedExercises}
+          keyExtractor={(item) => item.id}
+          renderItem={renderExerciseItem}
+          ListHeaderComponent={() => (
+            <ExerciseHistoryHeader exercisesCount={usedExercises.length} />
+          )}
+          onRefresh={handleRefresh}
+          refreshing={isRefreshing}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+              tintColor={theme.red8?.val || '#b91c1c'}
+            />
+          }
+          style={styles.list}
+          contentContainerStyle={styles.listContent}
+        />
+      ) : (
+        <>
+          <ExerciseHistoryHeader exercisesCount={0} />
+
+          <EmptyMessage
+            title='No hay ejercicios en tu historial'
+            description='Completa tu primer entrenamiento para ver las estadísticas de tus ejercicios'
           />
-        ) : (
-          <>
-            {renderHeader()}
-            {renderEmptyState()}
-          </>
-        )}
-      </YStack>
+        </>
+      )}
     </Container>
   )
 }
@@ -217,12 +181,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
-  },
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
-    paddingVertical: 64,
   },
 })

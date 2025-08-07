@@ -1,8 +1,6 @@
-import { StyleSheet } from 'react-native'
-import { Text } from 'tamagui'
-
 import RoutinesList from 'presentation/components/routines/routines-list'
 import Container from 'presentation/components/ui/container'
+import EmptyMessage from 'presentation/components/ui/empty-message'
 import Title from 'presentation/components/ui/title'
 import useRoutines from 'presentation/hooks/use-routines'
 
@@ -18,19 +16,11 @@ export default function HomeScreen() {
           routines={routines}
         />
       ) : (
-        <Text style={styles.emptyMessage}>
-          No hay rutinas hechas recientemente.
-        </Text>
+        <EmptyMessage
+          title='No hay rutinas disponibles'
+          description='Crea una rutina para comenzar a entrenar'
+        />
       )}
     </Container>
   )
 }
-
-const styles = StyleSheet.create({
-  emptyMessage: {
-    color: '#cbcbcb',
-    textAlign: 'center',
-    marginVertical: 20,
-    fontSize: 16,
-  }
-})

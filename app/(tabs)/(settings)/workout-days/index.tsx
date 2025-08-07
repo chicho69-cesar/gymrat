@@ -1,8 +1,8 @@
-import { Alert, StyleSheet } from 'react-native'
-import { Text } from 'tamagui'
+import { Alert } from 'react-native'
 
 import Container from 'presentation/components/ui/container'
 import CustomLink from 'presentation/components/ui/custom-link'
+import EmptyMessage from 'presentation/components/ui/empty-message'
 import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
 import Title from 'presentation/components/ui/title'
 import WorkoutDaysList from 'presentation/components/workout-days/workout-days-list'
@@ -54,19 +54,11 @@ export default function WorkoutDaysScreen() {
           onDelete={handleDelete}
         />
       ) : (
-        <Text style={styles.emptyMessage}>
-          No hay días de entrenamiento creados.
-        </Text>
+        <EmptyMessage
+          title='No hay días de entrenamiento registrados'
+          description='Puedes crear un nuevo día de entrenamiento para comenzar a registrar tus ejercicios.'
+        />
       )}
     </Container>
   )
 }
-
-const styles = StyleSheet.create({
-  emptyMessage: {
-    color: '#cbcbcb',
-    textAlign: 'center',
-    marginVertical: 20,
-    fontSize: 16,
-  }
-})

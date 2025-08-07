@@ -1,10 +1,8 @@
-import { StyleSheet } from 'react-native'
-import { Text } from 'tamagui'
-
 import ExerciseList from 'presentation/components/exercises/exercise-list'
 import RoutinesList from 'presentation/components/routines/routines-list'
 import Container from 'presentation/components/ui/container'
 import CustomLink from 'presentation/components/ui/custom-link'
+import EmptyMessage from 'presentation/components/ui/empty-message'
 import Title from 'presentation/components/ui/title'
 import WorkoutDaysList from 'presentation/components/workout-days/workout-days-list'
 import useExercises from 'presentation/hooks/use-exercises'
@@ -32,9 +30,10 @@ export default function SettingsScreen() {
         {lastRoutines.length > 0 ? (
           <RoutinesList routines={lastRoutines} />
         ) : (
-          <Text style={styles.emptyMessage}>
-            No hay rutinas hechas recientemente.
-          </Text>
+          <EmptyMessage
+            title='No hay rutinas recientes'
+            description='Crea o accede a una rutina para comenzar.'
+          />
         )}
       </>
 
@@ -52,9 +51,10 @@ export default function SettingsScreen() {
         {topExercises.length > 0 ? (
           <ExerciseList exercises={topExercises} />
         ) : (
-          <Text style={styles.emptyMessage}>
-            No hay ejercicios registrados.
-          </Text>
+          <EmptyMessage
+            title='No hay ejercicios registrados'
+            description='Registra tus ejercicios para verlos aquí.'
+          />
         )}
       </>
 
@@ -72,20 +72,12 @@ export default function SettingsScreen() {
         {mostFrequents.length > 0 ? (
           <WorkoutDaysList workoutDays={mostFrequents} />
         ) : (
-          <Text style={styles.emptyMessage}>
-            No hay días de entrenamiento creados.
-          </Text>
+          <EmptyMessage
+            title='No hay días de entrenamiento frecuentes'
+            description='Comienza a registrar tus días de entrenamiento para verlos aquí.'
+          />
         )}
       </>
     </Container>
   )
 }
-
-const styles = StyleSheet.create({
-  emptyMessage: {
-    color: '#cbcbcb',
-    textAlign: 'center',
-    marginVertical: 20,
-    fontSize: 16,
-  }
-})

@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
-import { Alert, StyleSheet } from 'react-native'
-import { Text } from 'tamagui'
+import { Alert } from 'react-native'
 
 import ExerciseList from 'presentation/components/exercises/exercise-list'
 import Container from 'presentation/components/ui/container'
 import CustomLink from 'presentation/components/ui/custom-link'
+import EmptyMessage from 'presentation/components/ui/empty-message'
 import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
 import Title from 'presentation/components/ui/title'
 import useExercises from 'presentation/hooks/use-exercises'
@@ -61,19 +61,11 @@ export default function ExercisesScreen() {
           onDelete={handleDelete}
         />
       ) : (
-        <Text style={styles.emptyMessage}>
-          No hay ejercicios creados.
-        </Text>
+        <EmptyMessage
+          title='No hay ejercicios creados'
+          description='Crea tu primer ejercicio para comenzar a registrar tus entrenamientos.'
+        />
       )}
     </Container>
   )
 }
-
-const styles = StyleSheet.create({
-  emptyMessage: {
-    color: '#cbcbcb',
-    textAlign: 'center',
-    marginVertical: 20,
-    fontSize: 16,
-  }
-})

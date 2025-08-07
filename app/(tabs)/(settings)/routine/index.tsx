@@ -1,9 +1,9 @@
-import { Alert, StyleSheet } from 'react-native'
-import { Text } from 'tamagui'
+import { Alert } from 'react-native'
 
 import RoutinesList from 'presentation/components/routines/routines-list'
 import Container from 'presentation/components/ui/container'
 import CustomLink from 'presentation/components/ui/custom-link'
+import EmptyMessage from 'presentation/components/ui/empty-message'
 import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
 import Title from 'presentation/components/ui/title'
 import useRoutines from 'presentation/hooks/use-routines'
@@ -54,19 +54,11 @@ export default function RoutineSettingsScreen() {
           onDelete={handleDelete}
         />
       ) : (
-        <Text style={styles.emptyMessage}>
-          No hay rutinas creadas.
-        </Text>
+        <EmptyMessage
+          title='No hay rutinas creadas'
+          description='Crea una rutina para comenzar a organizar tus entrenamientos.'
+        />
       )}
     </Container>
   )
 }
-
-const styles = StyleSheet.create({
-  emptyMessage: {
-    color: '#cbcbcb',
-    textAlign: 'center',
-    marginVertical: 20,
-    fontSize: 16,
-  }
-})

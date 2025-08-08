@@ -12,12 +12,12 @@ import EmptyMessage from 'presentation/components/ui/empty-message'
 import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
 import Title from 'presentation/components/ui/title'
 import useExercises from 'presentation/hooks/use-exercises'
-import useWorkout from 'presentation/hooks/use-workout'
+import useStats from 'presentation/hooks/use-stats'
 
 export default function WorkoutStatsScreen() {
   const { id } = useLocalSearchParams()
   const { exercises } = useExercises()
-  const { stats: workoutStats, loading } = useWorkout(id as string)
+  const { stats: workoutStats, loading } = useStats(id as string)
 
   const [exercise, setExercise] = useState<Exercise | null>(null)
 

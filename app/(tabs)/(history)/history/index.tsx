@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react'
-
-import { Exercise } from 'domain/entities/exercise.entity'
 import ExerciseHistoryHeader from 'presentation/components/stats/exercise-history-header'
 import ExercisesHistoryList from 'presentation/components/stats/exercises-history-list'
 import Container from 'presentation/components/ui/container'
@@ -10,14 +7,7 @@ import Title from 'presentation/components/ui/title'
 import useExercises from 'presentation/hooks/use-exercises'
 
 export default function HistoryScreen() {
-  const { topExercises, loading, refresh } = useExercises()
-  const [usedExercises, setUsedExercises] = useState<Exercise[]>([])
-
-  useEffect(() => {
-    // Filtrar solo ejercicios que han sido usados (los que aparecen en topExercises)
-    // Si topExercises está ordenado por uso, entonces todos han sido usados
-    setUsedExercises(topExercises)
-  }, [topExercises])
+  const { usedExercises, loading, refresh } = useExercises()
 
   if (loading && usedExercises.length === 0) {
     return (

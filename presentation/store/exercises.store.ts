@@ -4,11 +4,13 @@ import { create } from 'zustand'
 interface ExerciseState {
   exercises: Exercise[]
   topExercises: Exercise[]
+  usedExercises: Exercise[]
   isLoading: boolean
   error: string | null
 
   setExercises: (exercises: Exercise[]) => void
   setTopExercises: (topExercises: Exercise[]) => void
+  setUsedExercises: (usedExercises: Exercise[]) => void
   addExercise: (exercise: Exercise) => void
   updateExercise: (id: string, exercise: Exercise) => void
   removeExercise: (id: string) => void
@@ -20,6 +22,7 @@ interface ExerciseState {
 export const useExercisesStore = create<ExerciseState>()((set) => ({
   exercises: [],
   topExercises: [],
+  usedExercises: [],
   isLoading: false,
   error: null,
 
@@ -43,6 +46,10 @@ export const useExercisesStore = create<ExerciseState>()((set) => ({
 
   setTopExercises: (topExercises: Exercise[]) => set({
     topExercises
+  }),
+
+  setUsedExercises: (usedExercises: Exercise[]) => set({
+    usedExercises
   }),
 
   setIsLoading: (isLoading: boolean) => set({ isLoading }),

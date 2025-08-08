@@ -18,10 +18,12 @@ export default function useExercises() {
 
   const exercises = useExercisesStore((state) => state.exercises)
   const topExercises = useExercisesStore((state) => state.topExercises)
+  const usedExercises = useExercisesStore((state) => state.usedExercises)
   const loading = useExercisesStore((state) => state.isLoading)
   const error = useExercisesStore((state) => state.error)
   const setExercises = useExercisesStore((state) => state.setExercises)
   const setTopExercises = useExercisesStore((state) => state.setTopExercises)
+  const setUsedExercises = useExercisesStore((state) => state.setUsedExercises)
   const setLoading = useExercisesStore((state) => state.setIsLoading)
   const setError = useExercisesStore((state) => state.setError)
 
@@ -37,13 +39,16 @@ export default function useExercises() {
       const [
         fetchedExercises,
         fetchedTopExercises,
+        fetchedUsedExercises,
       ] = await Promise.all([
         ExercisesUseCases.getAll(exerciseRepository),
         ExercisesUseCases.getTop(exerciseRepository, 5),
+        ExercisesUseCases.getUsed(exerciseRepository),
       ])
 
       setExercises(fetchedExercises)
       setTopExercises(fetchedTopExercises)
+      setUsedExercises(fetchedUsedExercises)
     } catch (error) {
       console.error('Failed to fetch exercises:', error)
       setError('Failed to fetch exercises')
@@ -90,6 +95,7 @@ export default function useExercises() {
   return {
     exercises,
     topExercises,
+    usedExercises,
     loading,
     error,
 

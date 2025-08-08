@@ -65,6 +65,24 @@ export class ExerciseDataSourceImpl implements ExerciseDataSource {
     }
   }
 
+  async getUsedExercises(): Promise<Exercise[]> {
+    try {
+      const exercises = await this.db.getAllAsync<Exercise>(
+        /* sql */`
+          SELECT DISTINCT e.*
+          FROM Exercise e
+          INNER JOIN WorkoutDayExercise wde ON e.id = wde.exerciseId 
+          INNER JOIN WorkoutExercise we ON wde.workoutExerciseId = we.id
+        `
+      )
+
+      return exercises
+    } catch (error) {
+      console.error('Error fetching used exercises:', error)
+      return []
+    }
+  }
+
   async createExercise(exercise: ExerciseDto): Promise<Exercise> {
     try {
       const id = generateId()

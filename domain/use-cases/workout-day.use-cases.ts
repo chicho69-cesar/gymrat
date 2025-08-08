@@ -16,6 +16,10 @@ export class WorkoutDayUseCases {
     return repository.getMostFrequentWorkoutDays(limit)
   }
 
+  static async getByRoutineId(repository: WorkoutDayRepository, routineId: string): Promise<WorkoutDay[]> {
+    return repository.getWorkoutDaysByRoutineId(routineId)
+  }
+
   static async create(
     repository: WorkoutDayRepository,
     workoutDay: WorkoutDayDto,

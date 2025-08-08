@@ -106,6 +106,22 @@ export default function useWorkoutDays() {
     }
   }
 
+  const getByRoutineId = async (routineId: string) => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      const workoutDaysByRoutine = await WorkoutDayUseCases.getByRoutineId(workoutDaysRepository, routineId)
+      return workoutDaysByRoutine
+    } catch (error) {
+      console.error('Failed to fetch workout days by routine ID:', error)
+      setError('Failed to fetch workout days by routine ID')
+      return []
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return {
     workoutDays,
     mostFrequents,
@@ -117,5 +133,6 @@ export default function useWorkoutDays() {
     fetchWorkoutDayExercises,
     createUpdateWorkoutDay,
     deleteWorkoutDay,
+    getByRoutineId,
   }
 }

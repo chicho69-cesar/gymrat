@@ -66,6 +66,26 @@ export class WorkoutDayDatasourceImpl implements WorkoutDayDataSource {
     }
   }
 
+  async getWorkoutDaysByRoutineId(routineId: string): Promise<WorkoutDay[]> {
+    try {
+      const workoutDays = await this.db.getAllAsync<WorkoutDay>(
+        /* sql */`
+          SELECT wd.*
+          FROM WorkoutDay wd
+          INNER JOIN CircuitWorkout cw ON wd.id = cw.workoutDayId
+          INNER JOIN Routine r ON cw.routineId = r.id
+          WHERE r.id = ?
+        `,
+        [routineId]
+      )
+
+      return workoutDays
+    } catch (error) {
+      console.error('Error fetching workout days by routine ID:', error)
+      return []
+    }
+  }
+
   async createWorkoutDay(workoutDay: WorkoutDayDto): Promise<WorkoutDay> {
     try {
       const id = generateId()

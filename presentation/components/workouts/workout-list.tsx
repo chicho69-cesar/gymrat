@@ -49,7 +49,7 @@ export default function WorkoutList({ workouts, onRefresh }: WorkoutListProps) {
               transform: [{ scale: 0.98 }],
             }
           ]}
-          onPress={() => router.push(`/workout/${item.id}`)}
+          onPress={() => router.push(`/workout/${item.id}?routineId=${item.routineId}&workoutDayId=${item.workoutDayId}`)}
         >
           <View style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>

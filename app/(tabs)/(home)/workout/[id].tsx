@@ -18,7 +18,7 @@ interface ExerciseSetInput extends ExerciseSet {
 }
 
 export default function WorkoutScreen() {
-  const { id } = useLocalSearchParams()
+  const { id, routineId, workoutDayId } = useLocalSearchParams()
   const theme = useTheme()
 
   const { exercises } = useExercises()

@@ -71,7 +71,7 @@ export default function RoutineScreen() {
       )}
 
       <CustomLink
-        href={`/workout/new?routineId=${id}`}
+        href={`/workout/new?routineId=${id}&workoutDayId=${'new'}`}
         link='Nuevo entrenamiento'
         iconName='add-circle-outline'
         iconSize={16}
@@ -124,7 +124,7 @@ export default function RoutineScreen() {
           <Button
             size='$4'
             theme='red'
-            onPress={() => router.push(`/workout/new?routineId=${id}`)}
+            onPress={() => router.push(`/workout/new?routineId=${id}&workoutDayId=${'new'}`)}
             icon={Plus}
           >
             Crear entrenamiento

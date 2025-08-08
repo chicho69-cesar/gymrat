@@ -7,7 +7,7 @@ import Title from 'presentation/components/ui/title'
 import useExercises from 'presentation/hooks/use-exercises'
 
 export default function HistoryScreen() {
-  const { usedExercises, loading, refresh } = useExercises()
+  const { topExercises: usedExercises, loading, refresh } = useExercises()
 
   if (loading && usedExercises.length === 0) {
     return (

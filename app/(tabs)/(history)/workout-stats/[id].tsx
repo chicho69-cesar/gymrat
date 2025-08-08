@@ -3,7 +3,7 @@ import { useLocalSearchParams } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Dimensions, StyleSheet } from 'react-native'
 import { LineChart } from 'react-native-svg-charts'
-import { Card, Text, useTheme, View } from 'tamagui'
+import { Card, Text, View } from 'tamagui'
 
 import { TimesHelper } from 'config/helpers/times'
 import { Exercise } from 'domain/entities/exercise.entity'
@@ -12,62 +12,21 @@ import EmptyMessage from 'presentation/components/ui/empty-message'
 import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
 import Title from 'presentation/components/ui/title'
 import useExercises from 'presentation/hooks/use-exercises'
-
-interface WorkoutStats {
-  date: string
-  weight: number
-  reps: number
-  unit: 'Kg' | 'LB'
-  volume: number
-  workoutId: string
-}
+import useWorkout from 'presentation/hooks/use-workout'
 
 export default function WorkoutStatsScreen() {
   const { id } = useLocalSearchParams()
-  const theme = useTheme()
   const { exercises } = useExercises()
+  const { stats: workoutStats, loading } = useWorkout(id as string)
 
   const [exercise, setExercise] = useState<Exercise | null>(null)
-  const [workoutStats, setWorkoutStats] = useState<WorkoutStats[]>([])
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (typeof id === 'string') {
-      loadExerciseStats()
+      const foundExercise = exercises.find((ex) => ex.id === id)
+      setExercise(foundExercise || null)
     }
   }, [id, exercises])
-
-  const loadExerciseStats = async () => {
-    setLoading(true)
-    try {
-      const foundExercise = exercises.find(ex => ex.id === id)
-      setExercise(foundExercise || null)
-
-      // Example data (same as provided)
-      const exampleStats: WorkoutStats[] = [
-        { date: '01-07-2025', weight: 70, reps: 10, unit: 'Kg', volume: 700, workoutId: 'w1' },
-        { date: '05-07-2025', weight: 72.5, reps: 10, unit: 'Kg', volume: 725, workoutId: 'w2' },
-        { date: '08-07-2025', weight: 75, reps: 9, unit: 'Kg', volume: 675, workoutId: 'w3' },
-        { date: '12-07-2025', weight: 75, reps: 10, unit: 'Kg', volume: 750, workoutId: 'w4' },
-        { date: '15-07-2025', weight: 77.5, reps: 10, unit: 'Kg', volume: 775, workoutId: 'w5' },
-        { date: '19-07-2025', weight: 80, reps: 8, unit: 'Kg', volume: 640, workoutId: 'w6' },
-        { date: '22-07-2025', weight: 80, reps: 10, unit: 'Kg', volume: 800, workoutId: 'w7' },
-        { date: '26-07-2025', weight: 82.5, reps: 10, unit: 'Kg', volume: 825, workoutId: 'w8' },
-      ]
-
-      const sortedStats = exampleStats.sort((a, b) => {
-        const dateA = new Date(a.date.split('-').reverse().join('-'))
-        const dateB = new Date(b.date.split('-').reverse().join('-'))
-        return dateA.getTime() - dateB.getTime()
-      })
-
-      setWorkoutStats(sortedStats)
-    } catch (error) {
-      console.error('Error loading exercise stats:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const formatDate = (dateString: string) => {
     const [day, month] = dateString.split('-')
@@ -112,7 +71,6 @@ export default function WorkoutStatsScreen() {
   const volumeData = getChartData()
   const weightData = getWeightChartData()
   const labels = workoutStats.map(stat => formatDate(stat.date))
-  const screenWidth = Dimensions.get('window').width
 
   if (loading) {
     return (

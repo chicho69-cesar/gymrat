@@ -32,3 +32,12 @@ export interface WorkoutExerciseWithDetails extends WorkoutExercise {
   workoutDayExercise?: WorkoutDayExercise
   sets: ExerciseSet[]
 }
+
+export interface WorkoutStats {
+  workoutId: string
+  date: string
+  weight: number
+  reps: number
+  unit: 'Kg' | 'LB'
+  volume: number
+}

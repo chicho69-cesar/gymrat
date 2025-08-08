@@ -1,8 +1,9 @@
+import DateTimePicker from '@react-native-community/datetimepicker'
 import { Calendar } from '@tamagui/lucide-icons'
 import { useLocalSearchParams } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Alert } from 'react-native'
-import { Text, useTheme, View } from 'tamagui'
+import { Button, Text, useTheme, View } from 'tamagui'
 
 import { ExerciseSet, WorkoutExerciseWithDetails } from 'domain/entities/workout.entity'
 import Container from 'presentation/components/ui/container'
@@ -39,13 +40,17 @@ export default function WorkoutScreen() {
   const { exercises } = useExercises()
   const { } = useWorkout(id as string)
 
+  const [currentId, setCurrentId] = useState<string>(typeof id === 'string' ? id : 'new')
+  const [date, setDate] = useState(new Date())
+  const [open, setOpen] = useState(false)
+
   const [workout, setWorkout] = useState<any>(null)
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExerciseWithDetails[]>([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (typeof id === 'string') {
-      console.log('Loading workout with id:', id)
+      setCurrentId(id)
       loadWorkoutData()
     }
   }, [id])
@@ -152,10 +157,39 @@ export default function WorkoutScreen() {
             color='$accent8'
             fontWeight={'700'}
           >
-            {TimesHelper.formatDate(workout.date)}
+            {/* {TimesHelper.formatDate(workout.date)} */}
+            {TimesHelper.formatDate(TimesHelper.formatFromDate(date, 'DD-MM-YYYY'))}
           </Text>
         </View>
       )}
+
+      <>
+        <Button
+          theme='red'
+          onPress={() => setOpen(true)}
+          my='$3'
+        >
+          Actualizar fecha
+        </Button>
+
+        {open && (
+          <DateTimePicker
+            value={date}
+            mode='date'
+            display='default'
+            onChange={(event, selectedDate) => {
+              const currentDate = selectedDate || new Date()
+
+              setOpen(false)
+              setDate(currentDate)
+            }}
+            style={{ width: '100%' }}
+            textColor={theme.gray10?.val || '#a1a1aa'}
+            themeVariant='dark'
+            accentColor={theme.accent8?.val || '#f59e0b'}
+          />
+        )}
+      </>
 
       <View style={{ marginVertical: 16 }}>
         {workoutExercises.map((workoutExercise, index) =>

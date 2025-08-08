@@ -1,4 +1,4 @@
-import { Calendar, Dumbbell } from '@tamagui/lucide-icons'
+import { Calendar } from '@tamagui/lucide-icons'
 import { useLocalSearchParams } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Alert } from 'react-native'
@@ -6,23 +6,38 @@ import { Text, useTheme, View } from 'tamagui'
 
 import { ExerciseSet, WorkoutExerciseWithDetails } from 'domain/entities/workout.entity'
 import Container from 'presentation/components/ui/container'
+import EmptyMessage from 'presentation/components/ui/empty-message'
 import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
 import Title from 'presentation/components/ui/title'
 import WorkoutExercise from 'presentation/components/workouts/workout-exercise'
 import useExercises from 'presentation/hooks/use-exercises'
-import useWorkoutDays from 'presentation/hooks/use-workout-days'
+import useWorkout from 'presentation/hooks/use-workout'
 import { TimesHelper } from '../../../../config/helpers/times'
 
 interface ExerciseSetInput extends ExerciseSet {
   isModified?: boolean
 }
 
+/* 
+Voy a necesitar para crear el entrenamiento:
+routineId: string ✅
+workoutDayId: string ✅
+date: string - Datetimepicker / defecto: hoy
+
+Una vez teniendo el workoutDayId obtengo los ejercicios que estan asociados a ese día,
+usando la tabla WorkoutDay, WorkoutDayExercise y Exercise.
+
+Al entrar a la pantalla con un useEffect, si el id es 'new' entonces creo un nuevo workout vació, 
+con todos los sets de los ejercicios en 0.
+Si es un id existente, obtengo el workout y los ejercicios asociados a ese workout, además de los sets de cada ejercicio.
+*/
+
 export default function WorkoutScreen() {
   const { id, routineId, workoutDayId } = useLocalSearchParams()
   const theme = useTheme()
 
   const { exercises } = useExercises()
-  const { workoutDayExercises } = useWorkoutDays()
+  const { } = useWorkout(id as string)
 
   const [workout, setWorkout] = useState<any>(null)
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExerciseWithDetails[]>([])
@@ -30,9 +45,10 @@ export default function WorkoutScreen() {
 
   useEffect(() => {
     if (typeof id === 'string') {
+      console.log('Loading workout with id:', id)
       loadWorkoutData()
     }
-  }, [id, exercises, workoutDayExercises])
+  }, [id])
 
   const loadWorkoutData = async () => {
     setLoading(true)
@@ -84,6 +100,7 @@ export default function WorkoutScreen() {
 
   const updateExerciseSet = async (exerciseIndex: number, setIndex: number, field: 'weight' | 'reps' | 'unit', value: string | number) => {
     const newWorkoutExercises = [...workoutExercises]
+
     const updatedSet = {
       ...newWorkoutExercises[exerciseIndex].sets[setIndex],
       [field]: field === 'unit' ? value : parseFloat(value.toString()) || 0,
@@ -94,22 +111,27 @@ export default function WorkoutScreen() {
     setWorkoutExercises(newWorkoutExercises)
 
     console.log('Saving set:', updatedSet)
+    /* TODO: Save the update on this set */
   }
 
   const handleInputBlur = async (exerciseIndex: number, setIndex: number) => {
     const set = workoutExercises[exerciseIndex].sets[setIndex] as ExerciseSetInput
+
     if (set.isModified) {
       try {
         console.log('Auto-saving set on blur:', set)
 
         const newWorkoutExercises = [...workoutExercises]
         delete (newWorkoutExercises[exerciseIndex].sets[setIndex] as any).isModified
+
         setWorkoutExercises(newWorkoutExercises)
       } catch (error) {
         console.error('Error auto-saving set:', error)
       }
     }
   }
+
+  const handleSubmit = async () => { }
 
   if (loading) {
     return (
@@ -147,20 +169,10 @@ export default function WorkoutScreen() {
         )}
 
         {workoutExercises.length === 0 && (
-          <View style={{ alignItems: 'center', padding: 32 }}>
-            <Dumbbell
-              size={64}
-              color={theme.gray8?.val || '#71717a'}
-            />
-
-            <Text
-              fontSize='$5'
-              fontWeight='600'
-              color='$accent10'
-            >
-              No hay ejercicios en este entrenamiento
-            </Text>
-          </View>
+          <EmptyMessage
+            title='No hay ejercicios en este entrenamiento'
+            description='Puedes añadir ejercicios desde la pantalla de días de entrenamiento o crear un nuevo ejercicio.'
+          />
         )}
       </View>
     </Container>

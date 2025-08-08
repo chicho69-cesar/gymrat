@@ -1,5 +1,7 @@
-import { Dumbbell } from '@tamagui/lucide-icons'
+import { ChevronDown, ChevronRight, Dumbbell } from '@tamagui/lucide-icons'
 import { WorkoutExerciseWithDetails } from 'domain/entities/workout.entity'
+import { useState } from 'react'
+import { Pressable } from 'react-native'
 import { Text, useTheme, View } from 'tamagui'
 import ExerciseSet from './exercise-set'
 
@@ -13,6 +15,8 @@ interface WorkoutExerciseProps {
 
 export default function WorkoutExercise({ exerciseIndex, workoutExercise, updateExerciseSet, handleInputBlur }: WorkoutExerciseProps) {
   const theme = useTheme()
+  const [collapsed, setCollapsed] = useState(false)
+
   const totalSets = workoutExercise.workoutDayExercise?.sets || 0
   const heatingSets = workoutExercise.workoutDayExercise?.heatingSets || 0
 
@@ -27,7 +31,13 @@ export default function WorkoutExercise({ exerciseIndex, workoutExercise, update
         backgroundColor: '$accent1'
       }}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+      <Pressable
+        style={({ pressed }) => ([
+          { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 },
+          pressed && { opacity: 0.7 }
+        ])}
+        onPress={() => setCollapsed(!collapsed)}
+      >
         <Dumbbell size={24} color='$red10' />
 
         <View flex={1}>
@@ -39,71 +49,81 @@ export default function WorkoutExercise({ exerciseIndex, workoutExercise, update
             {totalSets} sets • {heatingSets} calentamiento
           </Text>
         </View>
-      </View>
 
-      {heatingSets > 0 && (
-        <View style={{ marginBottom: 16 }}>
-          <Text fontSize='$5' fontWeight='700' color='$yellow11' style={{ marginBottom: 8 }}>
-            Sets de calentamiento
-          </Text>
+        {collapsed ? (
+          <ChevronRight size={24} color='$red10' />
+        ) : (
+          <ChevronDown size={24} color='$red10' />
+        )}
+      </Pressable>
 
-          <View style={{ flexDirection: 'column', gap: 8 }}>
-            {Array.from({ length: heatingSets }, (_, index) => {
-              const setData = workoutExercise.sets[index] || {
-                id: `heating-${index}`,
-                workoutExerciseId: workoutExercise.id,
-                weight: 0,
-                reps: 0,
-                unit: 'Kg' as const,
-                setNumber: index + 1
-              }
+      {!collapsed && (
+        <>
+          {heatingSets > 0 && (
+            <View style={{ marginBottom: 16 }}>
+              <Text fontSize='$5' fontWeight='700' color='$yellow11' style={{ marginBottom: 8 }}>
+                Sets de calentamiento
+              </Text>
 
-              return (
-                <ExerciseSet
-                  key={setData.id}
-                  set={setData}
-                  setIndex={index}
-                  exerciseIndex={exerciseIndex}
-                  isHeatingSet={true}
-                  updateExerciseSet={updateExerciseSet}
-                  handleInputBlur={handleInputBlur}
-                />
-              )
-            })}
+              <View style={{ flexDirection: 'column', gap: 8 }}>
+                {Array.from({ length: heatingSets }, (_, index) => {
+                  const setData = workoutExercise.sets[index] || {
+                    id: `heating-${index}`,
+                    workoutExerciseId: workoutExercise.id,
+                    weight: 0,
+                    reps: 0,
+                    unit: 'Kg' as const,
+                    setNumber: index + 1
+                  }
+
+                  return (
+                    <ExerciseSet
+                      key={setData.id}
+                      set={setData}
+                      setIndex={index}
+                      exerciseIndex={exerciseIndex}
+                      isHeatingSet={true}
+                      updateExerciseSet={updateExerciseSet}
+                      handleInputBlur={handleInputBlur}
+                    />
+                  )
+                })}
+              </View>
+            </View>
+          )}
+
+          <View style={{ marginBottom: 16 }}>
+            <Text fontSize='$5' fontWeight='700' color='$red11' style={{ marginBottom: 8 }}>
+              Sets de trabajo
+            </Text>
+
+            <View style={{ flexDirection: 'column', gap: 8 }}>
+              {Array.from({ length: totalSets }, (_, index) => {
+                const setData = workoutExercise.sets[index] || {
+                  id: `work-${index}`,
+                  workoutExerciseId: workoutExercise.id,
+                  weight: 0,
+                  reps: 0,
+                  unit: 'Kg' as const,
+                  setNumber: index + 1
+                }
+
+                return (
+                  <ExerciseSet
+                    key={setData.id}
+                    set={setData}
+                    setIndex={index}
+                    exerciseIndex={exerciseIndex}
+                    isHeatingSet={false}
+                    updateExerciseSet={updateExerciseSet}
+                    handleInputBlur={handleInputBlur}
+                  />
+                )
+              })}
+            </View>
           </View>
-        </View>
+        </>
       )}
-
-      <View style={{ marginBottom: 16 }}>
-        <Text fontSize='$5' fontWeight='700' color='$red11' style={{ marginBottom: 8 }}>
-          Sets de trabajo
-        </Text>
-
-        <View style={{ flexDirection: 'column', gap: 8 }}>
-          {Array.from({ length: totalSets }, (_, index) => {
-            const setData = workoutExercise.sets[index] || {
-              id: `work-${index}`,
-              workoutExerciseId: workoutExercise.id,
-              weight: 0,
-              reps: 0,
-              unit: 'Kg' as const,
-              setNumber: index + 1
-            }
-
-            return (
-              <ExerciseSet
-                key={setData.id}
-                set={setData}
-                setIndex={index}
-                exerciseIndex={exerciseIndex}
-                isHeatingSet={false}
-                updateExerciseSet={updateExerciseSet}
-                handleInputBlur={handleInputBlur}
-              />
-            )
-          })}
-        </View>
-      </View>
     </View>
   )
 }

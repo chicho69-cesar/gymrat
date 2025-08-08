@@ -13,6 +13,7 @@ import Title from 'presentation/components/ui/title'
 import WorkoutExercise from 'presentation/components/workouts/workout-exercise'
 import useExercises from 'presentation/hooks/use-exercises'
 import useWorkout from 'presentation/hooks/use-workout'
+import useWorkoutDays from 'presentation/hooks/use-workout-days'
 import { TimesHelper } from '../../../../config/helpers/times'
 
 interface ExerciseSetInput extends ExerciseSet {
@@ -23,14 +24,18 @@ interface ExerciseSetInput extends ExerciseSet {
 Voy a necesitar para crear el entrenamiento:
 routineId: string ✅
 workoutDayId: string ✅
-date: string - Datetimepicker / defecto: hoy
+date: string - Datetimepicker / defecto: hoy ✅
 
-Una vez teniendo el workoutDayId obtengo los ejercicios que estan asociados a ese día,
+En la pantalla de rutina, al agregar un nuevo entreno, que aparezca un modal
+para seleccionar el día de entrenamiento (workoutDayId) en base a los Dias
+de entreno que tenga la rutina.
+
+Una vez teniendo el workoutDayId obtengo los ejercicios que están asociados a ese día,
 usando la tabla WorkoutDay, WorkoutDayExercise y Exercise.
 
 Al entrar a la pantalla con un useEffect, si el id es 'new' entonces creo un nuevo workout vació, 
-con todos los sets de los ejercicios en 0.
-Si es un id existente, obtengo el workout y los ejercicios asociados a ese workout, además de los sets de cada ejercicio.
+con todos los sets de los ejercicios en 0. Si es un id existente, obtengo el workout y 
+los ejercicios asociados a ese workout, además de los sets de cada ejercicio.
 */
 
 export default function WorkoutScreen() {
@@ -39,6 +44,7 @@ export default function WorkoutScreen() {
 
   const { exercises } = useExercises()
   const { } = useWorkout(id as string)
+  const { workoutDayExercises, fetchWorkoutDayExercises } = useWorkoutDays()
 
   const [currentId, setCurrentId] = useState<string>(typeof id === 'string' ? id : 'new')
   const [date, setDate] = useState(new Date())
@@ -54,6 +60,16 @@ export default function WorkoutScreen() {
       loadWorkoutData()
     }
   }, [id])
+
+  // useEffect(() => {
+  //   if (typeof workoutDayId === 'string') {
+  //     fetchWorkoutDayExercises(workoutDayId)
+  //   }
+  // }, [workoutDayId])
+
+  // useEffect(() => {
+  //   console.log('workoutDayExercises updated:', workoutDayExercises)
+  // }, [workoutDayExercises])
 
   const loadWorkoutData = async () => {
     setLoading(true)

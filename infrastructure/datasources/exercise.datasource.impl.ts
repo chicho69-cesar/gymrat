@@ -72,7 +72,7 @@ export class ExerciseDataSourceImpl implements ExerciseDataSource {
           SELECT DISTINCT e.*
           FROM Exercise e
           INNER JOIN WorkoutDayExercise wde ON e.id = wde.exerciseId 
-          INNER JOIN WorkoutExercise we ON wde.workoutExerciseId = we.id
+          INNER JOIN WorkoutExercise we ON we.workoutDayExerciseId = wde.id
         `
       )
 

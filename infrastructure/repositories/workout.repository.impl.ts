@@ -1,6 +1,6 @@
 import { WorkoutDataSource } from 'domain/datasources/workout.datasource'
 import { ExerciseSetDto, WorkoutDto, WorkoutExerciseDto } from 'domain/dtos/workout.dto'
-import { ExerciseSet, Workout, WorkoutExercise } from 'domain/entities/workout.entity'
+import { ExerciseSet, Workout, WorkoutExercise, WorkoutStats } from 'domain/entities/workout.entity'
 import { WorkoutRepository } from 'domain/repositories/workout.repository'
 
 export class WorkoutRepositoryImpl implements WorkoutRepository {
@@ -64,5 +64,9 @@ export class WorkoutRepositoryImpl implements WorkoutRepository {
 
   deleteExerciseSet(id: string): Promise<void> {
     return this.datasource.deleteExerciseSet(id)
+  }
+
+  getWorkoutStats(exerciseId: string): Promise<WorkoutStats[]> {
+    return this.datasource.getWorkoutStats(exerciseId)
   }
 }

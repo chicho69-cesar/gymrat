@@ -3,7 +3,7 @@ import { SQLiteDatabase } from 'expo-sqlite'
 import { generateId } from 'config/helpers/create-uuid'
 import { WorkoutDataSource } from 'domain/datasources/workout.datasource'
 import { ExerciseSetDto, WorkoutDto, WorkoutExerciseDto } from 'domain/dtos/workout.dto'
-import { ExerciseSet, Workout, WorkoutExercise, WorkoutWithDay } from 'domain/entities/workout.entity'
+import { ExerciseSet, Workout, WorkoutExercise, WorkoutStats, WorkoutWithDay } from 'domain/entities/workout.entity'
 import { ExerciseSetMapper } from 'infrastructure/mappers/exercise-set.mapper'
 import { WorkoutExerciseMapper } from 'infrastructure/mappers/workout-exercise.mapper'
 import { WorkoutMapper } from 'infrastructure/mappers/workout.mapper'
@@ -257,6 +257,56 @@ export class WorkoutDataSourceImpl implements WorkoutDataSource {
     } catch (error) {
       console.error('Error deleting exercise set:', error)
       throw new Error('Failed to delete exercise set')
+    }
+  }
+
+  async getWorkoutStats(exerciseId: string): Promise<WorkoutStats[]> {
+    try {
+      // const exampleStats: WorkoutStats[] = [
+      //   { date: '01-07-2025', weight: 70, reps: 10, unit: 'Kg', volume: 700, workoutId: 'w1' },
+      //   { date: '05-07-2025', weight: 72.5, reps: 10, unit: 'Kg', volume: 725, workoutId: 'w2' },
+      //   { date: '08-07-2025', weight: 75, reps: 9, unit: 'Kg', volume: 675, workoutId: 'w3' },
+      //   { date: '12-07-2025', weight: 75, reps: 10, unit: 'Kg', volume: 750, workoutId: 'w4' },
+      //   { date: '15-07-2025', weight: 77.5, reps: 10, unit: 'Kg', volume: 775, workoutId: 'w5' },
+      //   { date: '19-07-2025', weight: 80, reps: 8, unit: 'Kg', volume: 640, workoutId: 'w6' },
+      //   { date: '22-07-2025', weight: 80, reps: 10, unit: 'Kg', volume: 800, workoutId: 'w7' },
+      //   { date: '26-07-2025', weight: 82.5, reps: 10, unit: 'Kg', volume: 825, workoutId: 'w8' },
+      // ]
+
+      // const sortedStats = exampleStats.sort((a, b) => {
+      //   const dateA = new Date(a.date.split('-').reverse().join('-'))
+      //   const dateB = new Date(b.date.split('-').reverse().join('-'))
+      //   return dateA.getTime() - dateB.getTime()
+      // })
+
+      const stats = await this.db.getAllAsync<WorkoutStats>(
+        /* sql */`
+          SELECT 
+            w.date AS date,
+            AVG(es.weight) AS weight,
+            SUM(es.reps) AS reps,
+            es.unit AS unit,
+            SUM(es.weight * es.reps) AS volume,
+            w.id AS workoutId
+          FROM 
+            Exercise e JOIN WorkoutDayExercise wde ON e.id = wde.exerciseId
+            JOIN WorkoutExercise we ON wde.id = we.workoutDayExerciseId
+            JOIN ExerciseSet es ON we.id = es.workoutExerciseId
+            JOIN Workout w ON we.workoutId = w.id
+          WHERE 
+            e.id = ? 
+          GROUP BY 
+            w.date, w.id
+          ORDER BY 
+            w.date ASC;
+        `,
+        [exerciseId]
+      )
+
+      return stats
+    } catch (error) {
+      console.error('Error fetching workout stats:', error)
+      return []
     }
   }
 }

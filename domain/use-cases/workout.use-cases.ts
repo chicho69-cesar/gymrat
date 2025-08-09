@@ -130,6 +130,10 @@ export class WorkoutUseCases {
     return updatedWorkout
   }
 
+  static async basicUpdate(repository: WorkoutRepository, id: string, workout: WorkoutDto): Promise<Workout> {
+    return repository.updateWorkout(id, workout)
+  }
+
   static async delete(repository: WorkoutRepository, id: string): Promise<void> {
     return repository.deleteWorkout(id)
   }

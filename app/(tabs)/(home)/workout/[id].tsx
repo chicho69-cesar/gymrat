@@ -1,4 +1,4 @@
-import DateTimePicker from '@react-native-community/datetimepicker'
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import { Calendar } from '@tamagui/lucide-icons'
 import { useLocalSearchParams } from 'expo-router'
 import { useState } from 'react'
@@ -11,6 +11,7 @@ import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
 import Title from 'presentation/components/ui/title'
 import WorkoutExercise from 'presentation/components/workouts/workout-exercise'
 import useWorkout from 'presentation/hooks/use-workout'
+import useWorkouts from 'presentation/hooks/use-workouts'
 import { TimesHelper } from '../../../../config/helpers/times'
 
 interface ExerciseSetInput extends ExerciseSet {
@@ -21,10 +22,27 @@ export default function WorkoutScreen() {
   const theme = useTheme()
 
   const { id, routineId, workoutDayId } = useLocalSearchParams()
-  const { activeWorkout, loading, workoutDetails, setWorkoutDetails, updateSet } = useWorkout(id as string)
+  const { activeWorkout, workoutDetails, loading, error, setWorkoutDetails, updateWorkout, updateSet } = useWorkout(id as string)
+  const { refresh } = useWorkouts(routineId as string)
 
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
+
+  const handleSelectDate = async (_: DateTimePickerEvent, selectedDate: Date | undefined) => {
+    const currentDate = selectedDate || new Date()
+
+    setOpen(false)
+    setDate(currentDate)
+
+    await updateWorkout({
+      id: activeWorkout?.id || '',
+      date: TimesHelper.formatFromDate(currentDate, 'DD-MM-YYYY'),
+      routineId: routineId as string || activeWorkout?.routineId || '',
+      workoutDayId: workoutDayId as string || activeWorkout?.workoutDayId || ''
+    })
+
+    await refresh()
+  }
 
   const updateExerciseSet = async (exerciseIndex: number, setIndex: number, field: 'weight' | 'reps' | 'unit', value: string | number) => {
     const newWorkoutExercises = [...workoutDetails]
@@ -97,12 +115,7 @@ export default function WorkoutScreen() {
             value={date}
             mode='date'
             display='default'
-            onChange={(event, selectedDate) => {
-              const currentDate = selectedDate || new Date()
-
-              setOpen(false)
-              setDate(currentDate)
-            }}
+            onChange={handleSelectDate}
             style={{ width: '100%' }}
             textColor={theme.gray10?.val || '#a1a1aa'}
             themeVariant='dark'

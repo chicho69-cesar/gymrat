@@ -1,4 +1,4 @@
-import { ExerciseSet } from 'domain/entities/workout.entity'
+import { ExerciseSet, Workout } from 'domain/entities/workout.entity'
 import { WorkoutUseCases } from 'domain/use-cases/workout.use-cases'
 import { WorkoutDataSourceImpl } from 'infrastructure/datasources/workout.datasource.impl'
 import { WorkoutRepositoryImpl } from 'infrastructure/repositories/workout.repository.impl'
@@ -51,7 +51,15 @@ export default function useWorkout(id: string) {
     }
   }
 
-  // const updateWorkout = async (workoutData) => {}
+  const updateWorkout = async (workoutData: Workout) => {
+    try {
+      const updatedWorkout = await WorkoutUseCases.basicUpdate(workoutRepository, workoutData.id, workoutData)
+      setActiveWorkout(updatedWorkout)
+    } catch (error) {
+      console.error('Error updating workout:', error)
+      setError('Error al actualizar el entrenamiento')
+    }
+  }
 
   const updateSet = async (set: ExerciseSet) => {
     try {
@@ -69,6 +77,7 @@ export default function useWorkout(id: string) {
     error,
 
     setWorkoutDetails,
+    updateWorkout,
     updateSet,
   }
 }

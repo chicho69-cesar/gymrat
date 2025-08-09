@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/gymrat.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.chicho69cesar.Gymrat"
     },
     "web": {
       "bundler": "metro",

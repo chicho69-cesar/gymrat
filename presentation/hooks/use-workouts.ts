@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 
 import { WorkoutDto } from 'domain/dtos/workout.dto'
+import { WorkoutDayExercise } from 'domain/entities/workout-day.entity'
 import { WorkoutUseCases } from 'domain/use-cases/workout.use-cases'
 import { WorkoutDataSourceImpl } from 'infrastructure/datasources/workout.datasource.impl'
 import { WorkoutRepositoryImpl } from 'infrastructure/repositories/workout.repository.impl'
@@ -38,15 +39,15 @@ export default function useWorkouts(routineId: string) {
     }
   }
 
-  const createUpdateWorkout = async (workoutDto: WorkoutDto, id: string) => {
+  const createUpdateWorkout = async (workoutDto: WorkoutDto, id: string, workoutDayExercises: WorkoutDayExercise[]) => {
     setLoading(true)
     setError(null)
 
     try {
       if (id === 'new') {
-        await WorkoutUseCases.create(workoutRepository, workoutDto)
+        await WorkoutUseCases.create(workoutRepository, workoutDto, workoutDayExercises)
       } else {
-        await WorkoutUseCases.update(workoutRepository, id, workoutDto)
+        await WorkoutUseCases.update(workoutRepository, id, workoutDto, workoutDayExercises)
       }
 
       await fetchWorkouts()

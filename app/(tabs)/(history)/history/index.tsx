@@ -1,3 +1,6 @@
+import { useEffect } from 'react'
+import { Alert } from 'react-native'
+
 import ExerciseHistoryHeader from 'presentation/components/stats/exercise-history-header'
 import ExercisesHistoryList from 'presentation/components/stats/exercises-history-list'
 import Container from 'presentation/components/ui/container'
@@ -7,7 +10,13 @@ import Title from 'presentation/components/ui/title'
 import useExercises from 'presentation/hooks/use-exercises'
 
 export default function HistoryScreen() {
-  const { usedExercises, loading, refresh } = useExercises()
+  const { usedExercises, loading, error, refresh } = useExercises()
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert('Error', error, [{ text: 'OK' }])
+    }
+  }, [error])
 
   if (loading && usedExercises.length === 0) {
     return (

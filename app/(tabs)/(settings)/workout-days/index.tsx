@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Alert } from 'react-native'
 
 import Container from 'presentation/components/ui/container'
@@ -9,7 +10,13 @@ import WorkoutDaysList from 'presentation/components/workout-days/workout-days-l
 import useWorkoutDays from 'presentation/hooks/use-workout-days'
 
 export default function WorkoutDaysScreen() {
-  const { loading, refresh, workoutDays, deleteWorkoutDay } = useWorkoutDays()
+  const { loading, error, refresh, workoutDays, deleteWorkoutDay } = useWorkoutDays()
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert('Error', error, [{ text: 'OK' }])
+    }
+  }, [error])
 
   const handleDelete = (workoutDayId: string) => {
     Alert.alert(

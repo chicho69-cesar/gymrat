@@ -56,7 +56,7 @@ export default function RoutineScreen() {
 
   useEffect(() => {
     if (error) {
-      Alert.alert('Error', error, [{ text: 'OK' }])
+      Alert.alert('Error', error, [{ text: 'OK', onPress: () => router.back() }])
     }
   }, [error])
 

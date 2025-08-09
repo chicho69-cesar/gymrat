@@ -1,7 +1,7 @@
 import { BarChart3, Calendar, Dumbbell, Target, TrendingUp, Weight } from '@tamagui/lucide-icons'
-import { useLocalSearchParams } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { Dimensions, StyleSheet } from 'react-native'
+import { Alert, Dimensions, StyleSheet } from 'react-native'
 import { LineChart } from 'react-native-svg-charts'
 import { Card, Text, View } from 'tamagui'
 
@@ -18,7 +18,7 @@ import useStats from 'presentation/hooks/use-stats'
 export default function WorkoutStatsScreen() {
   const { id } = useLocalSearchParams()
   const { exercises } = useExercises()
-  const { stats: workoutStats, loading } = useStats(id as string)
+  const { stats: workoutStats, loading, error } = useStats(id as string)
 
   const [exercise, setExercise] = useState<Exercise | null>(null)
 
@@ -28,6 +28,12 @@ export default function WorkoutStatsScreen() {
       setExercise(foundExercise || null)
     }
   }, [id, exercises])
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert('Error', error, [{ text: 'OK', onPress: () => router.back() }])
+    }
+  }, [error])
 
   const formatDate = (dateString: string) => {
     const [day, month] = dateString.split('-')

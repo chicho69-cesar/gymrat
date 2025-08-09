@@ -1,7 +1,8 @@
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import { Calendar } from '@tamagui/lucide-icons'
-import { useLocalSearchParams } from 'expo-router'
-import { useState } from 'react'
+import { router, useLocalSearchParams } from 'expo-router'
+import { useEffect, useState } from 'react'
+import { Alert } from 'react-native'
 import { Button, Text, useTheme, View } from 'tamagui'
 
 import { ExerciseSet } from 'domain/entities/workout.entity'
@@ -27,6 +28,12 @@ export default function WorkoutScreen() {
 
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert('Error', error, [{ text: 'OK', onPress: () => router.back() }])
+    }
+  }, [error])
 
   const handleSelectDate = async (_: DateTimePickerEvent, selectedDate: Date | undefined) => {
     const currentDate = selectedDate || new Date()

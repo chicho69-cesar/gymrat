@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Alert } from 'react-native'
 
 import RoutinesList from 'presentation/components/routines/routines-list'
@@ -9,7 +10,13 @@ import Title from 'presentation/components/ui/title'
 import useRoutines from 'presentation/hooks/use-routines'
 
 export default function RoutineSettingsScreen() {
-  const { loading, routines, refresh, deleteRoutine } = useRoutines()
+  const { loading, routines, error, refresh, deleteRoutine } = useRoutines()
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert('Error', error, [{ text: 'OK' }])
+    }
+  }, [error])
 
   const handleDelete = (routineId: string) => {
     Alert.alert(

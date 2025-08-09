@@ -1,4 +1,4 @@
-import { ChevronRight, Dumbbell, Target } from '@tamagui/lucide-icons'
+import { Calendar, Dumbbell, Target } from '@tamagui/lucide-icons'
 import { router } from 'expo-router'
 import { useState } from 'react'
 import { FlatList, Pressable, RefreshControl, StyleSheet } from 'react-native'
@@ -95,7 +95,7 @@ export default function RoutinesList({ routines, onRefresh, onDelete }: Routines
                 </Text>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 4 }}>
-                  <Target
+                  <Calendar
                     size={14}
                     color='#a1a1aa'
                   />
@@ -110,13 +110,6 @@ export default function RoutinesList({ routines, onRefresh, onDelete }: Routines
                   </Text>
                 </View>
               </View>
-            </View>
-
-            <View style={styles.actionIndicator}>
-              <ChevronRight
-                size={20}
-                color='#a1a1aa'
-              />
             </View>
           </View>
         </Pressable>
@@ -179,18 +172,5 @@ const styles = StyleSheet.create({
   actionIndicator: {
     marginLeft: 12,
     opacity: 0.6,
-  },
-  progressContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 3,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  },
-  progressBar: {
-    height: '100%',
-    width: '75%',
-    borderTopRightRadius: 2,
   },
 })

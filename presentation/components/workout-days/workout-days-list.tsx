@@ -1,7 +1,8 @@
+import { Clock, Zap } from '@tamagui/lucide-icons'
 import { router } from 'expo-router'
 import { useState } from 'react'
 import { FlatList, Pressable, RefreshControl, StyleSheet } from 'react-native'
-import { Text, useTheme } from 'tamagui'
+import { Text, useTheme, View } from 'tamagui'
 
 import { WorkoutDay } from 'domain/entities/workout-day.entity'
 
@@ -49,23 +50,62 @@ export default function WorkoutDaysList({ workoutDays, onRefresh, onDelete }: Wo
           onPress={() => router.push(`/workout-days/${item.id}`)}
           onLongPress={() => onDelete?.(item.id)}
         >
-          <Text
-            style={[
-              styles.routineName,
-              { color: theme.red10.val || '#f87171' }
-            ]}
-          >
-            {item.name}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, gap: 12 }}>
+              <View
+                style={[
+                  styles.iconContainer,
+                  {
+                    backgroundColor: theme.red9.val || '#dc2626',
+                    shadowColor: theme.red11.val || '#b91c1c',
+                  }
+                ]}
+              >
+                <Zap
+                  size={24}
+                  color='#ffffff'
+                />
+              </View>
 
-          <Text
-            style={[
-              styles.routineDescription,
-              { color: theme.accent8.val || '#d4d4d8' }
-            ]}
-          >
-            {item.description}
-          </Text>
+              <View style={{ flexDirection: 'column', flex: 1, gap: 4 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }} space='$2'>
+                  <Text
+                    style={[
+                      styles.routineName,
+                      { color: theme.red10.val || '#f87171' }
+                    ]}
+                  >
+                    {item.name}
+                  </Text>
+                </View>
+
+                <Text
+                  style={[
+                    styles.routineDescription,
+                    { color: theme.accent8.val || '#d4d4d8' }
+                  ]}
+                >
+                  {item.description}
+                </Text>
+
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 }}>
+                  <Clock
+                    size={14}
+                    color='#a1a1aa'
+                  />
+
+                  <Text
+                    style={[
+                      styles.metaInfo,
+                      { color: theme.accent6.val || '#a1a1aa' }
+                    ]}
+                  >
+                    Día de entrenamiento
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
         </Pressable>
       )}
       style={styles.container}
@@ -81,7 +121,7 @@ const styles = StyleSheet.create({
   routineItem: {
     borderWidth: 2,
     borderRadius: 12,
-    padding: 12,
+    padding: 16,
     marginBottom: 16,
     shadowOffset: {
       width: 0,
@@ -90,17 +130,37 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
   },
   routineName: {
     fontSize: 18,
     fontWeight: '700',
-    marginBottom: 8,
     letterSpacing: 0.5,
+    flex: 1,
   },
   routineDescription: {
-    marginBottom: 12,
     fontSize: 15,
     lineHeight: 22,
     opacity: 0.9,
+  },
+  metaInfo: {
+    fontSize: 12,
+    fontWeight: '500',
+    opacity: 0.8,
   },
 })

@@ -1,14 +1,14 @@
 import '../tamagui-web.css'
 
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
+import { PortalProvider } from '@tamagui/portal'
 import { useFonts } from 'expo-font'
-import { SplashScreen, Stack } from 'expo-router'
+import { Slot, SplashScreen } from 'expo-router'
 import * as SQLite from 'expo-sqlite'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
 import { TamaguiProvider } from 'tamagui'
-import { PortalProvider } from '@tamagui/portal'
 
 import { DATABASE_NAME } from 'data/constants'
 import { migrateDB } from 'data/migrate-db'
@@ -50,15 +50,7 @@ export default function RootLayout() {
         >
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-  
-            <Stack>
-              <Stack.Screen
-                name='(tabs)'
-                options={{
-                  headerShown: false,
-                }}
-              />
-            </Stack>
+            <Slot />
           </ThemeProvider>
         </TamaguiProvider>
       </SQLite.SQLiteProvider>

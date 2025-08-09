@@ -41,3 +41,21 @@ export interface WorkoutStats {
   unit: 'Kg' | 'LB'
   volume: number
 }
+
+export interface WorkoutDetails {
+  workoutExerciseId: string
+  workoutId: string
+  workoutDayExerciseId: string
+  exerciseId: string
+  exerciseName: string
+  exerciseDescription: string
+  exerciseRest: number
+  workoutDayId: string
+  plannedSets: number
+  heatingSets: number
+  setId: string | null
+  weight: number | null
+  reps: number | null
+  unit: 'Kg' | 'LB'
+  setNumber: number | null
+}

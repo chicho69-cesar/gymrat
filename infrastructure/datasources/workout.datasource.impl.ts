@@ -3,7 +3,7 @@ import { SQLiteDatabase } from 'expo-sqlite'
 import { generateId } from 'config/helpers/create-uuid'
 import { WorkoutDataSource } from 'domain/datasources/workout.datasource'
 import { ExerciseSetDto, WorkoutDto, WorkoutExerciseDto } from 'domain/dtos/workout.dto'
-import { ExerciseSet, Workout, WorkoutExercise, WorkoutStats, WorkoutWithDay } from 'domain/entities/workout.entity'
+import { ExerciseSet, Workout, WorkoutDetails, WorkoutExercise, WorkoutStats, WorkoutWithDay } from 'domain/entities/workout.entity'
 import { ExerciseSetMapper } from 'infrastructure/mappers/exercise-set.mapper'
 import { WorkoutExerciseMapper } from 'infrastructure/mappers/workout-exercise.mapper'
 import { WorkoutMapper } from 'infrastructure/mappers/workout.mapper'
@@ -306,6 +306,55 @@ export class WorkoutDataSourceImpl implements WorkoutDataSource {
       return stats
     } catch (error) {
       console.error('Error fetching workout stats:', error)
+      return []
+    }
+  }
+
+  async getWorkoutExercisesDetails(workoutId: string): Promise<WorkoutDetails[]> {
+    try {
+      const details = await this.db.getAllAsync<WorkoutDetails>(
+        /* sql */`
+          SELECT 
+            we.id AS workoutExerciseId,
+            we.workoutId,
+            we.workoutDayExerciseId,
+            
+            -- Datos del Exercise
+            e.id AS exerciseId,
+            e.name AS exerciseName,
+            e.description AS exerciseDescription,
+            e.rest AS exerciseRest,
+            
+            -- Datos del WorkoutDayExercise
+            wde.workoutDayId,
+            wde.sets AS plannedSets,
+            wde.heatingSets,
+            
+            -- Datos de los Sets
+            es.id AS setId,
+            es.weight,
+            es.reps,
+            es.unit,
+            es.setNumber
+          FROM 
+            WorkoutExercise we
+          JOIN 
+            WorkoutDayExercise wde ON we.workoutDayExerciseId = wde.id
+          JOIN 
+            Exercise e ON wde.exerciseId = e.id
+          LEFT JOIN 
+            ExerciseSet es ON we.id = es.workoutExerciseId
+          WHERE 
+            we.workoutId = ?  -- Parámetro para el ID del Workout
+          ORDER BY 
+            we.id, es.setNumber;
+        `,
+        [workoutId]
+      )
+
+      return details
+    } catch (error) {
+      console.error('Error fetching workout exercises details:', error)
       return []
     }
   }

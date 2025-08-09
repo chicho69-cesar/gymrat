@@ -1,5 +1,5 @@
 import { ExerciseSetDto, WorkoutDto, WorkoutExerciseDto } from 'domain/dtos/workout.dto'
-import { ExerciseSet, Workout, WorkoutExercise, WorkoutStats, WorkoutWithDay } from 'domain/entities/workout.entity'
+import { ExerciseSet, Workout, WorkoutDetails, WorkoutExercise, WorkoutStats, WorkoutWithDay } from 'domain/entities/workout.entity'
 
 export abstract class WorkoutDataSource {
   abstract getWorkoutById(id: string): Promise<Workout | null>
@@ -20,4 +20,5 @@ export abstract class WorkoutDataSource {
   abstract deleteExerciseSet(id: string): Promise<void>
 
   abstract getWorkoutStats(exerciseId: string): Promise<WorkoutStats[]>
+  abstract getWorkoutExercisesDetails(workoutId: string): Promise<WorkoutDetails[]>
 }

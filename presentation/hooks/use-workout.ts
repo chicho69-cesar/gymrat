@@ -39,7 +39,7 @@ export default function useWorkout(id: string) {
         WorkoutUseCases.getById(workoutRepository, id),
         WorkoutUseCases.getDetails(workoutRepository, id),
       ])
-      
+
       setActiveWorkout(fetchedWorkout)
       setWorkoutDetails(fetchedDetails)
     } catch (err) {
@@ -55,5 +55,7 @@ export default function useWorkout(id: string) {
     workoutDetails,
     loading,
     error,
+
+    setWorkoutDetails,
   }
 }

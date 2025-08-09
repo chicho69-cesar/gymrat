@@ -1,17 +1,15 @@
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { Calendar } from '@tamagui/lucide-icons'
 import { useLocalSearchParams } from 'expo-router'
-import { useEffect, useState } from 'react'
-import { Alert } from 'react-native'
+import { useState } from 'react'
 import { Button, Text, useTheme, View } from 'tamagui'
 
-import { ExerciseSet, WorkoutExerciseWithDetails } from 'domain/entities/workout.entity'
+import { ExerciseSet } from 'domain/entities/workout.entity'
 import Container from 'presentation/components/ui/container'
 import EmptyMessage from 'presentation/components/ui/empty-message'
 import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
 import Title from 'presentation/components/ui/title'
 import WorkoutExercise from 'presentation/components/workouts/workout-exercise'
-import useExercises from 'presentation/hooks/use-exercises'
 import useWorkout from 'presentation/hooks/use-workout'
 import { TimesHelper } from '../../../../config/helpers/times'
 
@@ -20,90 +18,23 @@ interface ExerciseSetInput extends ExerciseSet {
 }
 
 /* 
-Voy a necesitar para crear el entrenamiento:
-routineId: string ✅
-workoutDayId: string ✅
-date: string - Datetimepicker / defecto: hoy ✅
 
-En la pantalla de rutina, al agregar un nuevo entreno, que aparezca un modal
-para seleccionar el día de entrenamiento (workoutDayId) en base a los Dias
-de entreno que tenga la rutina. ✅
+TODO: Actualizar el entrenamiento al cambiar la fecha
+TODO: Actualizar el set de entrenamiento al ejecutar el  update y el blur
 
-Una vez teniendo el workoutDayId obtengo los ejercicios que están asociados a ese día,
-usando la tabla WorkoutDay, WorkoutDayExercise y Exercise.
 */
 
 export default function WorkoutScreen() {
-  const { id, routineId, workoutDayId } = useLocalSearchParams()
   const theme = useTheme()
 
-  const { exercises } = useExercises()
-  const { activeWorkout, loading, workoutDetails } = useWorkout(id as string)
+  const { id, routineId, workoutDayId } = useLocalSearchParams()
+  const { activeWorkout, loading, workoutDetails, setWorkoutDetails } = useWorkout(id as string)
 
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
 
-  const [workoutExercises, setWorkoutExercises] = useState<WorkoutExerciseWithDetails[]>([])
-
-  useEffect(() => {
-    if (typeof id === 'string' && activeWorkout) {
-      loadWorkoutData()
-    }
-  }, [id, activeWorkout])
-
-  const loadWorkoutData = async () => {
-    // setLoading(true)
-
-    try {
-      const exampleWorkoutExercises: WorkoutExerciseWithDetails[] = [
-        {
-          id: 'we1',
-          workoutId: activeWorkout!.id,
-          workoutDayExerciseId: 'wde1',
-          exercise: {
-            id: 'ex1',
-            name: 'Press banca',
-            description: 'Press de banca con barra',
-            rest: 150
-          },
-          workoutDayExercise: { id: 'wde1', workoutDayId: 'wd1', exerciseId: 'ex1', sets: 4, heatingSets: 1 },
-          sets: [
-            { id: 'set1', workoutExerciseId: 'we1', weight: 80, reps: 10, unit: 'Kg', setNumber: 1 },
-            { id: 'set2', workoutExerciseId: 'we1', weight: 85, reps: 8, unit: 'Kg', setNumber: 2 },
-            { id: 'set3', workoutExerciseId: 'we1', weight: 90, reps: 6, unit: 'Kg', setNumber: 3 },
-            { id: 'set4', workoutExerciseId: 'we1', weight: 85, reps: 8, unit: 'Kg', setNumber: 4 },
-          ]
-        },
-        {
-          id: 'we2',
-          workoutId: activeWorkout!.id,
-          workoutDayExerciseId: 'wde2',
-          exercise: {
-            id: 'ex2',
-            name: 'Curl con barra',
-            description: 'Curl con barra para bíceps',
-            rest: 120
-          },
-          workoutDayExercise: { id: 'wde2', workoutDayId: 'wd1', exerciseId: 'ex2', sets: 3, heatingSets: 1 },
-          sets: [
-            { id: 'set5', workoutExerciseId: 'we2', weight: 15, reps: 12, unit: 'Kg', setNumber: 1 },
-            { id: 'set6', workoutExerciseId: 'we2', weight: 17.5, reps: 10, unit: 'Kg', setNumber: 2 },
-            { id: 'set7', workoutExerciseId: 'we2', weight: 20, reps: 8, unit: 'Kg', setNumber: 3 },
-          ]
-        }
-      ]
-
-      setWorkoutExercises(exampleWorkoutExercises)
-    } catch (error) {
-      console.error('Error loading workout data:', error)
-      Alert.alert('Error', 'No se pudo cargar la información del entrenamiento')
-    } finally {
-      // setLoading(false)
-    }
-  }
-
   const updateExerciseSet = async (exerciseIndex: number, setIndex: number, field: 'weight' | 'reps' | 'unit', value: string | number) => {
-    const newWorkoutExercises = [...workoutExercises]
+    const newWorkoutExercises = [...workoutDetails]
 
     const updatedSet = {
       ...newWorkoutExercises[exerciseIndex].sets[setIndex],
@@ -112,23 +43,23 @@ export default function WorkoutScreen() {
     }
 
     newWorkoutExercises[exerciseIndex].sets[setIndex] = updatedSet
-    setWorkoutExercises(newWorkoutExercises)
+    setWorkoutDetails(newWorkoutExercises)
 
-    console.log('Saving set:', updatedSet)
+    // console.log('Saving set:', updatedSet)
     /* TODO: Save the update on this set */
   }
 
   const handleInputBlur = async (exerciseIndex: number, setIndex: number) => {
-    const set = workoutExercises[exerciseIndex].sets[setIndex] as ExerciseSetInput
+    const set = workoutDetails[exerciseIndex].sets[setIndex] as ExerciseSetInput
 
     if (set.isModified) {
       try {
-        console.log('Auto-saving set on blur:', set)
-
-        const newWorkoutExercises = [...workoutExercises]
+        const newWorkoutExercises = [...workoutDetails]
         delete (newWorkoutExercises[exerciseIndex].sets[setIndex] as any).isModified
 
-        setWorkoutExercises(newWorkoutExercises)
+        setWorkoutDetails(newWorkoutExercises)
+
+        console.log('Auto-saving set:', set)
       } catch (error) {
         console.error('Error auto-saving set:', error)
       }

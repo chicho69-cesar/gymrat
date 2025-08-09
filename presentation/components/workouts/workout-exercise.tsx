@@ -15,7 +15,7 @@ interface WorkoutExerciseProps {
 
 export default function WorkoutExercise({ exerciseIndex, workoutExercise, updateExerciseSet, handleInputBlur }: WorkoutExerciseProps) {
   const theme = useTheme()
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(true)
 
   const totalSets = workoutExercise.workoutDayExercise?.sets || 0
   const heatingSets = workoutExercise.workoutDayExercise?.heatingSets || 0
@@ -99,20 +99,20 @@ export default function WorkoutExercise({ exerciseIndex, workoutExercise, update
 
             <View style={{ flexDirection: 'column', gap: 8 }}>
               {Array.from({ length: totalSets }, (_, index) => {
-                const setData = workoutExercise.sets[index] || {
-                  id: `work-${index}`,
+                const setData = workoutExercise.sets[index + heatingSets] || {
+                  id: `work-${index + heatingSets}`,
                   workoutExerciseId: workoutExercise.id,
                   weight: 0,
                   reps: 0,
                   unit: 'Kg' as const,
-                  setNumber: index + 1
+                  setNumber: index + 1 + heatingSets
                 }
 
                 return (
                   <ExerciseSet
                     key={setData.id}
                     set={setData}
-                    setIndex={index}
+                    setIndex={index + heatingSets}
                     exerciseIndex={exerciseIndex}
                     isHeatingSet={false}
                     updateExerciseSet={updateExerciseSet}

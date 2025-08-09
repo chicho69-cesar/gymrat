@@ -5,6 +5,7 @@ import { Dimensions, StyleSheet } from 'react-native'
 import { LineChart } from 'react-native-svg-charts'
 import { Card, Text, View } from 'tamagui'
 
+import { Formatter } from 'config/helpers/formatters'
 import { TimesHelper } from 'config/helpers/times'
 import { Exercise } from 'domain/entities/exercise.entity'
 import Container from 'presentation/components/ui/container'
@@ -135,7 +136,7 @@ export default function WorkoutStatsScreen() {
               </View>
 
               <Text fontSize='$6' fontWeight='700' color='$red10' my='$2'>
-                {stats.current.weight} {stats.current.unit}
+                {Formatter.formateWeight(stats.current.weight)} {stats.current.unit}
               </Text>
 
               <Text fontSize='$4' color='$accent8'>
@@ -143,7 +144,7 @@ export default function WorkoutStatsScreen() {
               </Text>
 
               <Text fontSize='$3' color='$accent9' fontWeight='700'>
-                Volumen: {stats.current.volume} {stats.current.unit}
+                Volumen: {Formatter.formateWeight(stats.current.volume)} {stats.current.unit}
               </Text>
             </Card>
 
@@ -157,7 +158,7 @@ export default function WorkoutStatsScreen() {
               </View>
 
               <Text fontSize='$6' fontWeight='700' color={stats.weightProgress >= 0 ? '$green11' : '$red11'} my='$2'>
-                {stats.weightProgress >= 0 ? '+' : ''}{stats.weightProgress} {stats.current.unit}
+                {stats.weightProgress >= 0 ? '+' : '-'}{Formatter.formateWeight(stats.weightProgress)} {stats.current.unit}
               </Text>
 
               <Text fontSize='$4' color='$accent8'>
@@ -165,7 +166,7 @@ export default function WorkoutStatsScreen() {
               </Text>
 
               <Text fontSize='$3' color={stats.volumeProgress >= 0 ? '$green10' : '$red10'} fontWeight='700'>
-                Vol: {stats.volumeProgress >= 0 ? '+' : ''}{stats.volumeProgress} {stats.current.unit}
+                Vol: {stats.volumeProgress >= 0 ? '+' : '-'}{Formatter.formateWeight(stats.volumeProgress)} {stats.current.unit}
               </Text>
             </Card>
           </View>
@@ -181,7 +182,7 @@ export default function WorkoutStatsScreen() {
               </View>
 
               <Text fontSize='$5' fontWeight='700' color='$blue11' mt='$2'>
-                {stats.maxWeight} {stats.current.unit}
+                {Formatter.formateWeight(stats.maxWeight)} {stats.current.unit}
               </Text>
             </Card>
 
@@ -195,7 +196,7 @@ export default function WorkoutStatsScreen() {
               </View>
 
               <Text fontSize='$5' fontWeight='700' color='$blue11' mt='$2'>
-                {stats.maxVolume} {stats.current.unit}
+                {Formatter.formateWeight(stats.maxVolume)} {stats.current.unit}
               </Text>
             </Card>
           </View>

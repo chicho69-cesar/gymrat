@@ -17,18 +17,11 @@ interface ExerciseSetInput extends ExerciseSet {
   isModified?: boolean
 }
 
-/* 
-
-TODO: Actualizar el entrenamiento al cambiar la fecha
-TODO: Actualizar el set de entrenamiento al ejecutar el  update y el blur
-
-*/
-
 export default function WorkoutScreen() {
   const theme = useTheme()
 
   const { id, routineId, workoutDayId } = useLocalSearchParams()
-  const { activeWorkout, loading, workoutDetails, setWorkoutDetails } = useWorkout(id as string)
+  const { activeWorkout, loading, workoutDetails, setWorkoutDetails, updateSet } = useWorkout(id as string)
 
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
@@ -45,8 +38,7 @@ export default function WorkoutScreen() {
     newWorkoutExercises[exerciseIndex].sets[setIndex] = updatedSet
     setWorkoutDetails(newWorkoutExercises)
 
-    // console.log('Saving set:', updatedSet)
-    /* TODO: Save the update on this set */
+    await updateSet(updatedSet)
   }
 
   const handleInputBlur = async (exerciseIndex: number, setIndex: number) => {
@@ -59,7 +51,7 @@ export default function WorkoutScreen() {
 
         setWorkoutDetails(newWorkoutExercises)
 
-        console.log('Auto-saving set:', set)
+        await updateSet(set as ExerciseSet)
       } catch (error) {
         console.error('Error auto-saving set:', error)
       }

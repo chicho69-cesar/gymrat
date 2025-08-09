@@ -38,7 +38,7 @@ export default function WorkoutScreen() {
   const theme = useTheme()
 
   const { exercises } = useExercises()
-  const { activeWorkout, loading } = useWorkout(id as string)
+  const { activeWorkout, loading, workoutDetails } = useWorkout(id as string)
 
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
@@ -60,7 +60,12 @@ export default function WorkoutScreen() {
           id: 'we1',
           workoutId: activeWorkout!.id,
           workoutDayExerciseId: 'wde1',
-          exercise: exercises.find(e => e.name.includes('Press')) || exercises[0],
+          exercise: {
+            id: 'ex1',
+            name: 'Press banca',
+            description: 'Press de banca con barra',
+            rest: 150
+          },
           workoutDayExercise: { id: 'wde1', workoutDayId: 'wd1', exerciseId: 'ex1', sets: 4, heatingSets: 1 },
           sets: [
             { id: 'set1', workoutExerciseId: 'we1', weight: 80, reps: 10, unit: 'Kg', setNumber: 1 },
@@ -73,7 +78,12 @@ export default function WorkoutScreen() {
           id: 'we2',
           workoutId: activeWorkout!.id,
           workoutDayExerciseId: 'wde2',
-          exercise: exercises.find(e => e.name.includes('Curl')) || exercises[1],
+          exercise: {
+            id: 'ex2',
+            name: 'Curl con barra',
+            description: 'Curl con barra para bíceps',
+            rest: 120
+          },
           workoutDayExercise: { id: 'wde2', workoutDayId: 'wd1', exerciseId: 'ex2', sets: 3, heatingSets: 1 },
           sets: [
             { id: 'set5', workoutExerciseId: 'we2', weight: 15, reps: 12, unit: 'Kg', setNumber: 1 },
@@ -179,7 +189,7 @@ export default function WorkoutScreen() {
       </>
 
       <View style={{ marginVertical: 16 }}>
-        {workoutExercises.map((workoutExercise, index) =>
+        {workoutDetails.map((workoutExercise, index) =>
           <WorkoutExercise
             key={workoutExercise.id}
             workoutExercise={workoutExercise}
@@ -189,7 +199,7 @@ export default function WorkoutScreen() {
           />
         )}
 
-        {workoutExercises.length === 0 && (
+        {workoutDetails.length === 0 && (
           <EmptyMessage
             title='No hay ejercicios en este entrenamiento'
             description='Puedes añadir ejercicios desde la pantalla de días de entrenamiento o crear un nuevo ejercicio.'

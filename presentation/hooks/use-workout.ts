@@ -11,9 +11,11 @@ export default function useWorkout(id: string) {
   const workoutRepository = new WorkoutRepositoryImpl(workoutDatasource)
 
   const activeWorkout = useWorkoutStore((state) => state.activeWorkout)
+  const workoutDetails = useWorkoutStore((state) => state.workoutDetails)
   const loading = useWorkoutStore((state) => state.isLoading)
   const error = useWorkoutStore((state) => state.error)
   const setActiveWorkout = useWorkoutStore((state) => state.setActiveWorkout)
+  const setWorkoutDetails = useWorkoutStore((state) => state.setWorkoutDetails)
   const setLoading = useWorkoutStore((state) => state.setIsLoading)
   const setError = useWorkoutStore((state) => state.setError)
 
@@ -30,8 +32,16 @@ export default function useWorkout(id: string) {
     setError(null)
 
     try {
-      const workout = await WorkoutUseCases.getById(workoutRepository, id)
-      setActiveWorkout(workout)
+      const [
+        fetchedWorkout,
+        fetchedDetails,
+      ] = await Promise.all([
+        WorkoutUseCases.getById(workoutRepository, id),
+        WorkoutUseCases.getDetails(workoutRepository, id),
+      ])
+      
+      setActiveWorkout(fetchedWorkout)
+      setWorkoutDetails(fetchedDetails)
     } catch (err) {
       console.error('Error loading workout:', err)
       setError('Error al cargar el entrenamiento')
@@ -42,6 +52,7 @@ export default function useWorkout(id: string) {
 
   return {
     activeWorkout,
+    workoutDetails,
     loading,
     error,
   }

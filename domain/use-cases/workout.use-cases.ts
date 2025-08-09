@@ -1,7 +1,8 @@
 import { ExerciseSetDto, WorkoutDto, WorkoutExerciseDto } from 'domain/dtos/workout.dto'
 import { WorkoutDayExercise } from 'domain/entities/workout-day.entity'
-import { ExerciseSet, Workout, WorkoutExercise } from 'domain/entities/workout.entity'
+import { ExerciseSet, Workout, WorkoutExercise, WorkoutExerciseWithDetails } from 'domain/entities/workout.entity'
 import { WorkoutRepository } from 'domain/repositories/workout.repository'
+import { WorkoutDetailsMapper } from 'infrastructure/mappers/workout-details.mapper'
 
 export class WorkoutUseCases {
   static async getById(repository: WorkoutRepository, id: string): Promise<Workout | null> {
@@ -163,5 +164,10 @@ export class WorkoutUseCases {
 
   static async deleteSet(repository: WorkoutRepository, id: string): Promise<void> {
     return repository.deleteExerciseSet(id)
+  }
+
+  static async getDetails(repository: WorkoutRepository, workoutId: string): Promise<WorkoutExerciseWithDetails[]> {
+    const details = await repository.getWorkoutExercisesDetails(workoutId)
+    return WorkoutDetailsMapper.fromWorkoutDetails(details)
   }
 }

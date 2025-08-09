@@ -13,7 +13,6 @@ import Title from 'presentation/components/ui/title'
 import WorkoutExercise from 'presentation/components/workouts/workout-exercise'
 import useExercises from 'presentation/hooks/use-exercises'
 import useWorkout from 'presentation/hooks/use-workout'
-import useWorkoutDays from 'presentation/hooks/use-workout-days'
 import { TimesHelper } from '../../../../config/helpers/times'
 
 interface ExerciseSetInput extends ExerciseSet {
@@ -28,14 +27,10 @@ date: string - Datetimepicker / defecto: hoy ✅
 
 En la pantalla de rutina, al agregar un nuevo entreno, que aparezca un modal
 para seleccionar el día de entrenamiento (workoutDayId) en base a los Dias
-de entreno que tenga la rutina.
+de entreno que tenga la rutina. ✅
 
 Una vez teniendo el workoutDayId obtengo los ejercicios que están asociados a ese día,
 usando la tabla WorkoutDay, WorkoutDayExercise y Exercise.
-
-Al entrar a la pantalla con un useEffect, si el id es 'new' entonces creo un nuevo workout vació, 
-con todos los sets de los ejercicios en 0. Si es un id existente, obtengo el workout y 
-los ejercicios asociados a ese workout, además de los sets de cada ejercicio.
 */
 
 export default function WorkoutScreen() {
@@ -43,48 +38,27 @@ export default function WorkoutScreen() {
   const theme = useTheme()
 
   const { exercises } = useExercises()
-  const { } = useWorkout(id as string)
-  const { workoutDayExercises, fetchWorkoutDayExercises } = useWorkoutDays()
+  const { activeWorkout, loading } = useWorkout(id as string)
 
-  const [currentId, setCurrentId] = useState<string>(typeof id === 'string' ? id : 'new')
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
 
-  const [workout, setWorkout] = useState<any>(null)
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExerciseWithDetails[]>([])
-  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (typeof id === 'string') {
-      setCurrentId(id)
+    if (typeof id === 'string' && activeWorkout) {
       loadWorkoutData()
     }
-  }, [id])
-
-  // useEffect(() => {
-  //   if (typeof workoutDayId === 'string') {
-  //     fetchWorkoutDayExercises(workoutDayId)
-  //   }
-  // }, [workoutDayId])
-
-  // useEffect(() => {
-  //   console.log('workoutDayExercises updated:', workoutDayExercises)
-  // }, [workoutDayExercises])
+  }, [id, activeWorkout])
 
   const loadWorkoutData = async () => {
-    setLoading(true)
-    try {
-      const exampleWorkout = {
-        id: typeof id === 'string' ? id : '',
-        date: '05-08-2025',
-        routineId: 'routine1',
-        workoutDayId: 'wd1'
-      }
+    // setLoading(true)
 
+    try {
       const exampleWorkoutExercises: WorkoutExerciseWithDetails[] = [
         {
           id: 'we1',
-          workoutId: exampleWorkout.id,
+          workoutId: activeWorkout!.id,
           workoutDayExerciseId: 'wde1',
           exercise: exercises.find(e => e.name.includes('Press')) || exercises[0],
           workoutDayExercise: { id: 'wde1', workoutDayId: 'wd1', exerciseId: 'ex1', sets: 4, heatingSets: 1 },
@@ -97,7 +71,7 @@ export default function WorkoutScreen() {
         },
         {
           id: 'we2',
-          workoutId: exampleWorkout.id,
+          workoutId: activeWorkout!.id,
           workoutDayExerciseId: 'wde2',
           exercise: exercises.find(e => e.name.includes('Curl')) || exercises[1],
           workoutDayExercise: { id: 'wde2', workoutDayId: 'wd1', exerciseId: 'ex2', sets: 3, heatingSets: 1 },
@@ -109,13 +83,12 @@ export default function WorkoutScreen() {
         }
       ]
 
-      setWorkout(exampleWorkout)
       setWorkoutExercises(exampleWorkoutExercises)
     } catch (error) {
       console.error('Error loading workout data:', error)
       Alert.alert('Error', 'No se pudo cargar la información del entrenamiento')
     } finally {
-      setLoading(false)
+      // setLoading(false)
     }
   }
 
@@ -152,8 +125,6 @@ export default function WorkoutScreen() {
     }
   }
 
-  const handleSubmit = async () => { }
-
   if (loading) {
     return (
       <FullScreenLoader />
@@ -164,7 +135,7 @@ export default function WorkoutScreen() {
     <Container>
       <Title text={id === 'new' ? 'Nuevo entrenamiento' : 'Entrenamiento'} />
 
-      {workout && (
+      {activeWorkout && (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <Calendar size={16} color={theme.gray10?.val || '#a1a1aa'} />
 
@@ -173,8 +144,8 @@ export default function WorkoutScreen() {
             color='$accent8'
             fontWeight={'700'}
           >
-            {/* {TimesHelper.formatDate(workout.date)} */}
-            {TimesHelper.formatDate(TimesHelper.formatFromDate(date, 'DD-MM-YYYY'))}
+            {TimesHelper.formatDate(activeWorkout.date)}
+            {/* {TimesHelper.formatDate(TimesHelper.formatFromDate(date, 'DD-MM-YYYY'))} */}
           </Text>
         </View>
       )}

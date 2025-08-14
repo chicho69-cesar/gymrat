@@ -1,6 +1,6 @@
 import { ArrowRight, Plus, X } from '@tamagui/lucide-icons'
-import { Pressable } from 'react-native'
-import { Adapt, Button, Dialog, Label, Paragraph, Sheet, Text, TooltipSimple, Unspaced, useTheme, View } from 'tamagui'
+import { FlatList, Pressable } from 'react-native'
+import { Adapt, Button, Dialog, Label, Paragraph, Sheet, Text, TooltipSimple, Unspaced, useTheme } from 'tamagui'
 
 import { WorkoutDay } from 'domain/entities/workout-day.entity'
 
@@ -115,14 +115,16 @@ export default function WorkoutDaySelector({
                 </TooltipSimple>
               </Label>
 
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  gap: 8,
+              <FlatList
+                data={workoutDays}
+                numColumns={2}
+                keyExtractor={(item) => item.id}
+                columnWrapperStyle={{
+                  justifyContent: 'space-between',
+                  marginBottom: 8,
                 }}
-              >
-                {workoutDays.map((wd) => (
+                style={{ flexGrow: 0 }}
+                renderItem={({ item: wd }) => (
                   <Pressable
                     key={wd.id}
                     onPress={() => onSelectWorkoutDay(wd.id)}
@@ -134,7 +136,7 @@ export default function WorkoutDaySelector({
                       padding: 8,
                       borderRadius: 8,
                       backgroundColor: workoutDay?.id === wd.id ? theme.red10?.val : theme.gray2?.val,
-                      marginRight: 8,
+                      marginHorizontal: 4,
                       borderWidth: 1,
                       borderColor: workoutDay?.id === wd.id ? theme.red10?.val : theme.accent10?.val,
                     }}
@@ -143,8 +145,8 @@ export default function WorkoutDaySelector({
                       {wd.name}
                     </Text>
                   </Pressable>
-                ))}
-              </View>
+                )}
+              />
             </>
 
             <Dialog.Close displayWhenAdapted asChild>

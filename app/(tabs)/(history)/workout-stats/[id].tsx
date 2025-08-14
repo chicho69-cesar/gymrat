@@ -164,7 +164,7 @@ export default function WorkoutStatsScreen() {
               </View>
 
               <Text fontSize='$6' fontWeight='700' color={stats.weightProgress >= 0 ? '$green11' : '$red11'} my='$2'>
-                {stats.weightProgress >= 0 ? '+' : '-'}{Formatter.formateWeight(stats.weightProgress)} {stats.current.unit}
+                {stats.weightProgress >= 0 ? '+' : ''}{Formatter.formateWeight(stats.weightProgress)} {stats.current.unit}
               </Text>
 
               <Text fontSize='$4' color='$accent8'>

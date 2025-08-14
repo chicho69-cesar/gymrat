@@ -11,6 +11,7 @@ import EmptyMessage from 'presentation/components/ui/empty-message'
 import FullScreenLoader from 'presentation/components/ui/full-screen-loader'
 import Title from 'presentation/components/ui/title'
 import WorkoutExercise from 'presentation/components/workouts/workout-exercise'
+import useExercises from 'presentation/hooks/use-exercises'
 import useWorkout from 'presentation/hooks/use-workout'
 import useWorkouts from 'presentation/hooks/use-workouts'
 import { TimesHelper } from '../../../../config/helpers/times'
@@ -25,6 +26,7 @@ export default function WorkoutScreen() {
   const { id, routineId, workoutDayId } = useLocalSearchParams()
   const { activeWorkout, workoutDetails, loading, error, setWorkoutDetails, updateWorkout, updateSet } = useWorkout(id as string)
   const { refresh } = useWorkouts(routineId as string)
+  const { refresh: refreshExercises } = useExercises()
 
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
@@ -64,6 +66,7 @@ export default function WorkoutScreen() {
     setWorkoutDetails(newWorkoutExercises)
 
     await updateSet(updatedSet)
+    refreshExercises()
   }
 
   const handleInputBlur = async (exerciseIndex: number, setIndex: number) => {
@@ -77,6 +80,7 @@ export default function WorkoutScreen() {
         setWorkoutDetails(newWorkoutExercises)
 
         await updateSet(set as ExerciseSet)
+        refreshExercises()
       } catch (error) {
         console.error('Error auto-saving set:', error)
       }

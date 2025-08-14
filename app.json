@@ -4,7 +4,7 @@
     "slug": "Gymrat",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/gymrat.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -20,8 +20,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/gymrat.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#25292e"
       },
       "package": "com.chicho69cesar.Gymrat"
     },
